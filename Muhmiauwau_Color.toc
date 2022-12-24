@@ -19,3 +19,7 @@ modules\hexInput\frames.xml
 modules\hexInput\config.lua
 
 
+modules\rgbInputs\frames.xml
+modules\rgbInputs\config.lua
+
+

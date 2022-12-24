@@ -129,7 +129,7 @@ function ColorTools:initTestFrame()
 		r, g, b, a = newR, newG, newB, newA;
 		-- And update any UI elements that use this color...
 
-		print(restore, r, g, b, a)
+	--	print(restore, r, g, b, a)
 
 
 		ColortestFrame.Texture:SetColorTexture(r, g, b, a)
@@ -155,7 +155,6 @@ function ColorTools:UpdateCPFRGB(editbox)
 		cr, cg, cb = tonumber(ColorTools.editboxes["r"]:GetNumber()), tonumber(ColorTools.editboxes["g"]:GetNumber()), tonumber(ColorTools.editboxes["b"]:GetNumber())
 	end
 	
-	print(cr, cg, cb)
 	-- lazy way to prevent most errors with invalid entries (letters)
 	if cr and cg and cb then
 		-- % based
@@ -163,7 +162,7 @@ function ColorTools:UpdateCPFRGB(editbox)
 			CPF:SetColorRGB(cr, cg, cb)
 		-- 0 - 255 based
 		else
-			print(cr, cg, cb)
+			--print(cr, cg, cb)
 			CPF:SetColorRGB(cr / 255, cg / 255, cb / 255)
 		end
 	else
@@ -201,81 +200,6 @@ end
 
 
 
---[[
-
---- HEX Input
-
-function ColorTools:createHEXInput(label, position)
-	local f = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsHEX")
-	f:SetPoint("TOPLEFT", ColorTools.colorSwatchX, ColorTools.colorSwatchY - ColorSwatch:GetHeight() - 5  - position * f.box:GetHeight() )
-	f.Label:SetText(label)
-	return f.box
-end
-
-function ColorTools:initHEXInput()
-	print("ok")
-	editboxes["hex"] = ColorTools:createHEXInput("HEX", 3)
-end
-
-function ColorTools:UpdateHEXInput()
-	local cr, cg, cb = CPF:GetColorRGB()
-	editboxes["hex"]:SetText(format('%02x%02x%02x', ColorTools:getColor255(cr), ColorTools:getColor255(cg), ColorTools:getColor255(cb)))
-end
-
-]]--
-
-
-
-
-
-
-
-
-
---- RGB Inputs
-
-function ColorTools:initRGBInputs()
-	ColorTools.editboxes["r"] = ColorTools:createRGBInput("R", 0)
-	ColorTools.editboxes["g"] = ColorTools:createRGBInput("G", 1)
-	ColorTools.editboxes["b"] = ColorTools:createRGBInput("B", 2)
-end
-
-
-
-function ColorTools:UpdateRGBInputs()
-	local cr, cg, cb = CPF:GetColorRGB()
-	ColorTools.editboxes["r"]:SetNumber(ColorTools:getColor255(cr))
-	ColorTools.editboxes["g"]:SetNumber(ColorTools:getColor255(cg))
-	ColorTools.editboxes["b"]:SetNumber(ColorTools:getColor255(cb))
-end
-
-
-function ColorTools:createRGBInput(label, position)
-	local f = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsRGB")
-	f:SetPoint("TOPLEFT", ColorTools.colorSwatchX, ColorTools.colorSwatchY - ColorSwatch:GetHeight() - 5  - position * f.box:GetHeight() )
-	f.Label:SetText(label)
-	return f.box
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -298,6 +222,7 @@ CPF:HookScript('OnShow', function()
 	ColorTools:UpdateRGBInputs();
 	ColorTools:UpdateHEXInput();
 end)
+
 CPF:HookScript('OnColorSelect',function()
 	ColorTools:UpdateRGBInputs();
 	ColorTools:UpdateHEXInput();

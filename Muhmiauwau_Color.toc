@@ -23,3 +23,8 @@ modules\rgbInputs\frames.xml
 modules\rgbInputs\config.lua
 
 
+modules\dropdown\frames.xml
+modules\dropdown\config.lua
+
+modules\palette\frames.xml
+modules\palette\config.lua

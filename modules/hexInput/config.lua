@@ -17,3 +17,7 @@ function ColorTools:UpdateHEXInput()
 	local cr, cg, cb = ColorPickerFrame:GetColorRGB()
 	ColorTools.editboxes["hex"]:SetText(format('%02x%02x%02x', ColorTools:getColor255(cr), ColorTools:getColor255(cg), ColorTools:getColor255(cb)))
 end
+
+
+ColorPickerFrame:HookScript('OnShow', function() ColorTools:UpdateHEXInput(); end)
+ColorPickerFrame:HookScript('OnColorSelect', function() ColorTools:UpdateHEXInput(); end)

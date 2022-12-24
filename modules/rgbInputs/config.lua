@@ -26,3 +26,10 @@ function ColorTools:UpdateRGBInputs()
 end
 
 
+
+
+
+ColorPickerFrame:HookScript('OnShow', function() ColorTools:UpdateRGBInputs(); end)
+ColorPickerFrame:HookScript('OnColorSelect', function() ColorTools:UpdateRGBInputs(); end)
+
+

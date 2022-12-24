@@ -5,6 +5,25 @@ local CPF, OSF = ColorPickerFrame, OpacitySliderFrame
 local r,g,b,a = 1, 0, 0, 1;
 
 
+ColorTools.colorPalettes = {
+	classColors = {
+		frame = nil,
+		name = "Class Colors",
+		colors = CLASS_ICON_TCOORDS
+	},
+	defaultColors = {
+		frame = nil,
+		name = "Default Colors",
+		colors = {
+			["lala"]	= {0, 0.25, 0, 0.25},
+			["bla"]		=  {0.25, 0.49609375, 0, 0.25},
+		}
+	}
+}
+
+ColorTools.activeColorPalette =  "defaultColors"
+
+
 
 ColorTools.editboxes = {};
 
@@ -12,15 +31,25 @@ ColorTools.colorSwatchX = 240;
 ColorTools.colorSwatchY = -32;
 
 
+
 function ColorTools:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("ColorToolsDB")
-	ColorTools:initTestFrame()
+
+
+	-- activate debug
+	local name, realm = UnitName("player")
+	if(name == "Evangelinmuh") then 
+		ColorTools:initTestFrame()
+	end
 
 	ColorTools:makeMovable()
 
 	ColorTools:initRGBInputs()
 
 	ColorTools:initHEXInput()
+
+
+	ColorTools:initDropdown()
 
 end 
 
@@ -91,6 +120,8 @@ function ColorTools:initTestFrame()
 	ColortestFrame.Texture:SetAllPoints()
 	ColortestFrame.Texture:SetColorTexture(r, g, b, a)
 
+	
+
 
 	ColorTestButton = CreateFrame("Button", nil, UIParent)
 	ColorTestButton:SetSize(200, 200)
@@ -106,7 +137,7 @@ function ColorTools:initTestFrame()
 	 ColorPickerFrame.previousValues = {r,g,b,a};
 	 ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = 
 	  changedCallback, changedCallback, changedCallback;
-	 ColorPickerFrame:SetColorRGB(r,g,b);
+	 ColorPickerFrame:SetColorRGB(r,g,b,a);
 	 --ColorPickerFrame:Hide(); -- Need to run the OnShow handler.
 	 --ColorPickerFrame:Show();
 	 ShowUIPanel(ColorPickerFrame);
@@ -129,10 +160,10 @@ function ColorTools:initTestFrame()
 		r, g, b, a = newR, newG, newB, newA;
 		-- And update any UI elements that use this color...
 
-	--	print(restore, r, g, b, a)
+		--print(restore, r, g, b, a)
 
 
-		ColortestFrame.Texture:SetColorTexture(r, g, b, a)
+		ColortestFrame.Texture:SetColorTexture(r, g, b,  a)
 	end
 
 end
@@ -170,7 +201,7 @@ function ColorTools:UpdateCPFRGB(editbox)
 	end
 	
 	-- update opacity
-	--OSF:SetValue(tonumber(editboxes.Alpha:GetText()) / 100)
+	--OpacitySliderFrame:SetValue(tonumber(editboxes.Alpha:GetText()) / 100)
 end
 
 
@@ -190,44 +221,3 @@ function ColorTools:getColor255(c)
 	return round(c * 255)
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
----- HOOKS
-
-
-
-
-
-CPF:HookScript('OnShow', function()
-	ColorTools:UpdateRGBInputs();
-	ColorTools:UpdateHEXInput();
-end)
-
-CPF:HookScript('OnColorSelect',function()
-	ColorTools:UpdateRGBInputs();
-	ColorTools:UpdateHEXInput();
-end)
-
-
---OSF:HookScript('OnShow', UpdateAlphaField)
---OSF:HookScript('OnValueChanged', UpdateAlphaField)

@@ -1,0 +1,21 @@
+﻿## Interface: 100002
+## Title: Muhmiauwau Color
+## Notes: Muhmiauwau's Color
+## Version: 10.0.2
+## Author: Muhmiauwau
+## SavedVariables: ColorToolsDB
+
+
+Libs\LibStub\LibStub.lua
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+
+
+frames.xml
+Config.lua
+
+
+modules\hexInput\frames.xml
+modules\hexInput\config.lua
+
+

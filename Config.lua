@@ -2,28 +2,13 @@ ColorTools = LibStub("AceAddon-3.0"):NewAddon("ColorTools")
 
 local CPF, OSF = ColorPickerFrame, OpacitySliderFrame
 
-local r,g,b,a = 1, 0, 0, 1;
 
 
-ColorTools.colorPalettes = {
-	classColors = {
-		frame = nil,
-		name = "Class Colors",
-		colors = CLASS_ICON_TCOORDS
-	},
-	defaultColors = {
-		frame = nil,
-		name = "Default Colors",
-		colors = {
-			["lala"]	= {0, 0.25, 0, 0.25},
-			["bla"]		=  {0.25, 0.49609375, 0, 0.25},
-		}
-	}
-}
-
-ColorTools.activeColorPalette =  "defaultColors"
 
 
+ColorTools.colorPalettes = {}
+
+ColorTools.activeColorPalette =  "lastUsedColors"
 
 ColorTools.editboxes = {};
 
@@ -33,7 +18,13 @@ ColorTools.colorSwatchY = -32;
 
 
 function ColorTools:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("ColorToolsDB")
+
+
+	if ColorToolsLastUsed == nil then 
+		ColorToolsLastUsed = {}
+	end
+	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
+
 
 
 	-- activate debug
@@ -63,7 +54,7 @@ end
 
 
 
-ColorPickerFrame:SetHeight(300)
+ColorPickerFrame:SetHeight(280)
 ColorPickerFrame:SetWidth(380)
 
 
@@ -108,7 +99,7 @@ end
 
 
 function ColorTools:initTestFrame()
-
+	local r,g,b,a = 1, 0, 0, 1;
 
 	ColortestFrame = CreateFrame("Frame", nil, UIParent)
 	ColortestFrame:SetSize(200, 200)
@@ -148,7 +139,7 @@ function ColorTools:initTestFrame()
 
 		local newR, newG, newB, newA;
 		if restore then
-			print("restore",restore)
+			--print("restore",restore)
 			-- The user bailed, we extract the old color from the table created by ShowColorPicker.
 			newR, newG, newB, newA = unpack(restore);
 		else
@@ -221,3 +212,36 @@ function ColorTools:getColor255(c)
 	return round(c * 255)
 end
 
+
+
+function dump(arg)
+	DevTools_Dump(arg)
+end
+
+
+
+
+
+
+
+ColorPickerOkayButton:HookScript('OnClick', function()  
+	local r, g, b = ColorPickerFrame:GetColorRGB();
+
+
+	local i = 0
+	for k, v in pairs(ColorToolsLastUsed) do
+		i = i + 1
+	end
+	local index = i + 1
+
+	ColorToolsLastUsed["usercolor" .. string.format("%03d", index)] = {r, g ,b, 1}
+
+	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
+
+end)
+
+
+ColorPickerFrame:HookScript('OnShow', function() 
+	--ColorTools.activeColorPalette = "lastUsedColors"
+	ColorTools:updateColorPalette(); 
+end)

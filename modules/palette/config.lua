@@ -1,76 +1,101 @@
 local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 
 
+local swatchSize = 32;
 local spacer = 5
-
 local cols = 8
 
 
 
 
+local function pairsByKeys (t, f)
+    local a = {}
+    for n in pairs(t) do table.insert(a, n) end
+    table.sort(a, f)
+    local i = 0      -- iterator variable
+    local iter = function ()   -- iterator function
+        i = i + 1
+        if a[i] == nil then return nil
+        else return a[i], t[a[i]]
+        end
+    end
+    return iter
+end
+
+local colorSwatches = {}
+
+-- setWidth of scroll child
+ColorToolsPaletteScrollFrame.Contents:SetWidth(ColorToolsPaletteScrollFrame:GetWidth())
+
 
 function ColorTools:updateColorPalette()
 
+	local colors = ColorTools.colorPalettes[ColorTools.activeColorPalette].colors
 
-	local pFrame = ColorTools.colorPalettes[ColorTools.activeColorPalette].frame
+	-- hide all present ColorSwatches
+	for k, v in pairs(colorSwatches) do
+		colorSwatches[k]:Hide()
+	end
+
+	local i = 1
 
 
+	local sortFunc = function(a, b) return a < b end
 
+	if ColorTools.activeColorPalette == "lastUsedColors" then 
+		sortFunc = function(a, b) return a > b end
+	end
+	
 
-	for k, v in pairs(ColorTools.colorPalettes) do
-
-		local f = ColorTools.colorPalettes[k].frame;
-
-		if(f == nil) then 
-			--
+	for k, v in pairsByKeys(colors, sortFunc) do
+		if colorSwatches[i] == nil then 
+			-- create new color swatch
+			table.insert(colorSwatches, ColorTools:createColorPaletteButton(colors[k], i, pFrame));
 		else
-		
-			if(k == ColorTools.activeColorPalette) then 
-				f:Show()
-			else
-				f:Hide()
-			end
+			-- update existing color swatch
+			ColorTools:upodateColorPaletteButton(colors[k], colorSwatches[i])
 		end
+		i = i + 1;
 	end	
 
 
+	-- update height on scroll child
+	local height = math.floor(i / cols) * (swatchSize + spacer) + swatchSize;
+	ColorToolsPaletteScrollFrame.Contents:SetHeight(height)
 
 
-	if (pFrame == nil) then 
-		 pFrame = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsColorPalette")
-		 pFrame:SetPoint("TOPLEFT", 25, -190 )
-		 pFrame:SetPoint("BOTTOMRIGHT", -25, 30 )
+end
 
 
-		ColorTools.colorPalettes[ColorTools.activeColorPalette].frame = pFrame
+function ColorTools:upodateColorPaletteButton(color, frame)
+	local r, g, b, a = unpack(color);
 
-		local colors = ColorTools.colorPalettes[ColorTools.activeColorPalette].colors
-		local i = 0
-		for k, v in pairs(colors) do
-			ColorTools:createColorPaletteButton(colors[k], i, pFrame)
-			i = i + 1;
-		end	
-	end
+	frame.Texture:SetColorTexture(r, g, b)
+	frame:SetScript("OnClick", function (self, button, down)
+		ColorPickerFrame:SetColorRGB(r, g, b);
+	end);
+
+	frame:Show();
 end
 
 
 
 
 
-function ColorTools:createColorPaletteButton(color, index, parent)
+function ColorTools:createColorPaletteButton(color, index)
 	local r, g, b, a = unpack(color);
+
+	index = index - 1;
 	
 	row = math.floor(index / cols)
-	x = (index - (row * cols)) * (32 + spacer)
-	y = row * (32 + spacer)
+	x = (index - (row * cols)) * (swatchSize + spacer)
+	y = row * (swatchSize + spacer)
 
-	local f = CreateFrame("Button", nil, parent, "ColorToolsColorButton")
-	f:SetPoint("TOPLEFT", parent,"TOPLEFT", x, -y )
+	local f = CreateFrame("Button", nil, ColorToolsPaletteScrollFrame.Contents, "ColorToolsColorButton")
+	f:SetPoint("TOPLEFT", x, -y )
 	f.Texture = f:CreateTexture()
 	f.Texture:SetAllPoints()
 	f.Texture:SetColorTexture(r, g, b)
-
-	
 
 	f:SetScript("OnClick", function (self, button, down)
 		ColorPickerFrame:SetColorRGB(r, g, b);

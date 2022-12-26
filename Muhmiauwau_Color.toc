@@ -3,17 +3,18 @@
 ## Notes: Muhmiauwau's Color
 ## Version: 10.0.2
 ## Author: Muhmiauwau
-## SavedVariables: ColorToolsDB
+## SavedVariables: ColorToolsLastUsed
 
 
 Libs\LibStub\LibStub.lua
 Libs\AceAddon-3.0\AceAddon-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
-
+Libs\LibColors-1.0\LibColors-1.0.lua
 
 frames.xml
 Config.lua
 
+ColorConnector.lua
 
 modules\hexInput\frames.xml
 modules\hexInput\config.lua

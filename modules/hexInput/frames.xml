@@ -15,7 +15,7 @@
 		</Layers>
 		<Frames>
 			<EditBox parentKey="box" inherits="InputBoxInstructionsTemplate" autoFocus="false" hidden="false" letters="6">
-				<Size x="98" y="30"/>
+				<Size x="48" y="30"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="5" y="0"/>
 				</Anchors>

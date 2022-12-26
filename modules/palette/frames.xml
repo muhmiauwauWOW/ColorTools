@@ -1,26 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\FrameXML\UI.xsd">
 
-	<Frame name="ColorToolsColorPalette" parent="ColorPickerFrame" virtual="true">
-
-		<Anchors>
-			<Anchor point="TOPLEFT" x="25" y="-190"/>
-			<Anchor point="BOTTOMRIGHT" x="-25" y="30"/>
-		</Anchors>
-
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture>
-					<Anchors>
-						<Anchor point="TOPLEFT" x="0" y="0"/>
-						<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
-					</Anchors>
-					<Color r="1.0" g="1.0" b="1.0" a="0.0"/>
-				</Texture>
-			</Layer>
-		</Layers>
-		
-	</Frame>
+	
 
 
 	
@@ -30,6 +11,41 @@
 			<Anchor point="TOPLEFT" x="0" y="0"/>
 		</Anchors>
 	</Button>
+
+
+	<ScrollFrame name="ColorToolsPaletteScrollFrame" parent="ColorPickerFrame" inherits="UIPanelScrollFrameCodeTemplate">
+		<Anchors>
+			<Anchor point="TOPLEFT" x="25" y="-190"/>
+			<Anchor point="BOTTOMRIGHT" x="-25" y="35"/>
+		</Anchors>
+		<Frames>
+			<Slider parentKey="ScrollBar" inherits="MinimalScrollBarTemplate">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="2" y="-15"/>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="2" y="15"/>
+				</Anchors>
+			</Slider>
+		</Frames>
+
+		<ScrollChild>
+			<Frame parentKey="Contents"   parent="ColorToolsPaletteScrollFrame" >
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="0"/>
+					<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Frame>
+
+		</ScrollChild>
+		<Scripts>
+			<OnLoad>
+				self.scrollBarHideable = false;
+				self.ScrollBar.trackBG:SetAlpha(0.0);
+				ScrollFrame_OnLoad(self);
+			</OnLoad>
+		</Scripts>
+	</ScrollFrame>
+
+
 
 
 

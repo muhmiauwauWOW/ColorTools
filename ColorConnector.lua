@@ -1,8 +1,6 @@
 local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 
 
-
-
 function covertColors(colors)
 	local newColors = {};
 

@@ -44,8 +44,6 @@ end
 	    ['changeFunc'] = function(dropdown_frame, dropdown_val)
 	    	ColorTools.activeColorPalette  = dropdown_val;
 	    	ColorTools:updateColorPalette()
-
-           -- ColorToolsPaletteScrollFrame:SetVerticalScroll(0)
 	    end
 	}
 

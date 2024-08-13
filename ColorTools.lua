@@ -42,7 +42,7 @@ end
 
 
 ColorPickerFrame:SetHeight(340)
-ColorPickerFrame.Content.HexBox:SetPoint("BOTTOMRIGHT", -23, 154)
+ColorPickerFrame.Content.HexBox:SetPoint("BOTTOMRIGHT", -23, 134)
 
 
 

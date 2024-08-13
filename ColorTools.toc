@@ -11,15 +11,12 @@ Libs\LibStub\LibStub.lua
 Libs\AceAddon-3.0\AceAddon-3.0.xml
 Libs\Lodash\Lodash.lua
 
-frames.xml
-Config.lua
 
+ColorTools.lua
 ColorConnector.lua
-
 
 modules\rgbInputs\frames.xml
 modules\rgbInputs\config.lua
-
 
 modules\dropdown\frames.xml
 modules\dropdown\config.lua

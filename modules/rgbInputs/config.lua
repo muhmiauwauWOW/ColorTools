@@ -1,5 +1,5 @@
 local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
-
+local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 
 --- RGB Inputs
 

@@ -9,8 +9,11 @@
 
 Libs\LibStub\LibStub.lua
 Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
 Libs\Lodash\Lodash.lua
 
+
+locale/locale.xml
 
 ColorTools.lua
 ColorConnector.lua

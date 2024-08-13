@@ -1,5 +1,5 @@
-if ColorTools then return end
 ColorTools = LibStub("AceAddon-3.0"):NewAddon("ColorTools")
+local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("Lodash"):Get()
 
 

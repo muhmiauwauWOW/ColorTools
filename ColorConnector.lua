@@ -1,5 +1,5 @@
 local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
-
+local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 
 function covertColors(colors)
 	local newColors = {};
@@ -29,7 +29,7 @@ end
 
 ColorTools.colorPalettes["lastUsedColors"] = {
 	order = 0,
-	name = "Last Used Colors",
+	name = L["lastUsedColors"],
 	colors = {}
 }
 
@@ -43,21 +43,21 @@ ColorTools.colorPalettes["classColors"] = {
 
 ColorTools.colorPalettes["powerBarColor"] = {
 	order = 2,
-	name = "PowerBar Colors",
+	name = L["powerBarColor"],
 	colors = covertColors(PowerBarColor)
 }
 
 
 ColorTools.colorPalettes["objectiveTrackerColor"] = {
 	order = 2,
-	name = "Objective Tracker Color",
+	name = L["objectiveTrackerColor"],
 	colors = covertColors(OBJECTIVE_TRACKER_COLOR)
 }
 
 
 ColorTools.colorPalettes["debuffTypeColor"] = {
 	order = 2,
-	name = "Debuff TypeColor",
+	name = L["debuffTypeColor"],
 	colors = covertColors(DebuffTypeColor)
 }
 

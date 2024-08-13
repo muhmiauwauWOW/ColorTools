@@ -193,10 +193,11 @@ ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()
 	end
 	local r, g, b = ColorPickerFrame:GetColorRGB();
 
-	ColorToolsLastUsed = sortColor(ColorToolsLastUsed)
-
-	if ColorToolsLastUsed[1].color[1] == r and  ColorToolsLastUsed[1].color[2] == g and  ColorToolsLastUsed[1].color[3] == b then 
-		return
+	if not _.isEmpty(ColorToolsLastUsed) then 
+		ColorToolsLastUsed = sortColor(ColorToolsLastUsed)
+		if ColorToolsLastUsed[1].color[1] == r and  ColorToolsLastUsed[1].color[2] == g and  ColorToolsLastUsed[1].color[3] == b then 
+			return
+		end
 	end
 
 	tinsert(ColorToolsLastUsed, {

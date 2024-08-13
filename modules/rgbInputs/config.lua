@@ -5,7 +5,7 @@ local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 
 function ColorTools:createRGBInput(label, position)
 	local f = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsRgbInput")
-	f:SetPoint("TOPLEFT", ColorTools.colorSwatchX, ColorTools.colorSwatchY - ColorSwatch:GetHeight() - 5  - position * f.box:GetHeight() )
+	f:SetPoint("BOTTOMRIGHT", ColorPickerFrame, "BOTTOMRIGHT", -7, 100 - position * f.box:GetHeight() )
 	f.Label:SetText(label)
 	return f.box
 end
@@ -30,6 +30,6 @@ end
 
 
 ColorPickerFrame:HookScript('OnShow', function() ColorTools:UpdateRGBInputs(); end)
-ColorPickerFrame:HookScript('OnColorSelect', function() ColorTools:UpdateRGBInputs(); end)
+ColorPickerFrame.Content.ColorPicker:HookScript('OnColorSelect', function() ColorTools:UpdateRGBInputs(); end)
 
 

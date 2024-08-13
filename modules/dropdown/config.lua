@@ -31,7 +31,7 @@ local function createDropdown(opts)
         end
     end)
 
-    dropdown:SetPoint("TOPLEFT", 5, -160);
+    dropdown:SetPoint("TOPLEFT", 5, -170);
     return dropdown
 end
 

@@ -1,23 +1,23 @@
-﻿## Interface: 100002
-## Title: Muhmiauwau Color
-## Notes: Muhmiauwau's Color
-## Version: 10.0.2
+﻿## Interface: 110002, 110000
+## Title: ColorTools Color Picker
+## Notes: Enhancement for the Color Picker
+## Version: @project-version@
 ## Author: Muhmiauwau
 ## SavedVariables: ColorToolsLastUsed
+## X-Curse-Project-ID: 1083107
 
 
 Libs\LibStub\LibStub.lua
 Libs\AceAddon-3.0\AceAddon-3.0.xml
-Libs\AceDB-3.0\AceDB-3.0.xml
-Libs\LibColors-1.0\LibColors-1.0.lua
+Libs\Lodash\Lodash.lua
 
 frames.xml
 Config.lua
 
 ColorConnector.lua
 
-modules\hexInput\frames.xml
-modules\hexInput\config.lua
+#modules\hexInput\frames.xml
+#modules\hexInput\config.lua
 
 
 modules\rgbInputs\frames.xml

@@ -3,9 +3,7 @@ local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 
 local swatchSize = 32;
 local spacer = 5
-local cols = 8
-
-
+local cols = 5
 
 
 local function pairsByKeys (t, f)
@@ -42,18 +40,24 @@ function ColorTools:updateColorPalette()
 
 	local sortFunc = function(a, b) return a < b end
 
-	if ColorTools.activeColorPalette == "lastUsedColors" then 
-		sortFunc = function(a, b) return a > b end
-	end
 	
 
 	for k, v in pairsByKeys(colors, sortFunc) do
 		if colorSwatches[i] == nil then 
 			-- create new color swatch
-			table.insert(colorSwatches, ColorTools:createColorPaletteButton(colors[k], i, pFrame));
+			if ColorTools.activeColorPalette == "lastUsedColors" then 
+				table.insert(colorSwatches, ColorTools:createColorPaletteButton(colors[k].color, i, pFrame));
+			else
+				table.insert(colorSwatches, ColorTools:createColorPaletteButton(colors[k], i, pFrame));
+			end
 		else
 			-- update existing color swatch
-			ColorTools:upodateColorPaletteButton(colors[k], colorSwatches[i])
+			if ColorTools.activeColorPalette == "lastUsedColors" then 
+				ColorTools:upodateColorPaletteButton(colors[k].color, colorSwatches[i])
+			else
+				ColorTools:upodateColorPaletteButton(colors[k], colorSwatches[i])
+			end
+
 		end
 		i = i + 1;
 	end	
@@ -72,7 +76,7 @@ function ColorTools:upodateColorPaletteButton(color, frame)
 
 	frame.Texture:SetColorTexture(r, g, b)
 	frame:SetScript("OnClick", function (self, button, down)
-		ColorPickerFrame:SetColorRGB(r, g, b);
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b);
 	end);
 
 	frame:Show();
@@ -98,7 +102,7 @@ function ColorTools:createColorPaletteButton(color, index)
 	f.Texture:SetColorTexture(r, g, b)
 
 	f:SetScript("OnClick", function (self, button, down)
-		ColorPickerFrame:SetColorRGB(r, g, b);
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b);
 	end);
 
 	return f;

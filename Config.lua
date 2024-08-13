@@ -1,9 +1,6 @@
+if ColorTools then return end
 ColorTools = LibStub("AceAddon-3.0"):NewAddon("ColorTools")
-
-local CPF, OSF = ColorPickerFrame, OpacitySliderFrame
-
-
-
+local _ = LibStub("Lodash"):Get()
 
 
 ColorTools.colorPalettes = {}
@@ -12,34 +9,25 @@ ColorTools.activeColorPalette =  "lastUsedColors"
 
 ColorTools.editboxes = {};
 
-ColorTools.colorSwatchX = 240;
+ColorTools.colorSwatchX = 300;
 ColorTools.colorSwatchY = -32;
 
 
 
 function ColorTools:OnInitialize()
-
-
 	if ColorToolsLastUsed == nil then 
 		ColorToolsLastUsed = {}
 	end
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 
-
-
-	-- activate debug
-	local name, realm = UnitName("player")
-	if(name == "Evangelinmuh") then 
-		ColorTools:initTestFrame()
-	end
-
-	ColorTools:makeMovable()
+	--@debug@
+		local name, realm = UnitName("player")
+		if(name == "Muhmiauwaudk") then 
+			ColorTools:initTestFrame()
+		end
+	--@end-debug@
 
 	ColorTools:initRGBInputs()
-
-	ColorTools:initHEXInput()
-
-
 	ColorTools:initDropdown()
 
 end 
@@ -53,59 +41,21 @@ function ColorTools:OnDisable()
 end
 
 
-
-ColorPickerFrame:SetHeight(280)
-ColorPickerFrame:SetWidth(380)
-
-
-ColorSwatch:SetPoint('TOPLEFT', ColorTools.colorSwatchX, ColorTools.colorSwatchY)
-
-
-
-function ColorTools:makeMovable()
-	-- Make the color picker movable.
-	local mover = CreateFrame('Frame', nil, CPF)
-	mover:SetPoint('TOPLEFT', CPF, 'TOP', -80, 15)
-	mover:SetPoint('BOTTOMRIGHT', CPF, 'TOP', 80, -20)
-	mover:EnableMouse(true)
-	mover:SetScript('OnMouseDown', function() CPF:StartMoving() end)
-	mover:SetScript('OnMouseUp', function() CPF:StopMovingOrSizing() end)
-	CPF:SetUserPlaced(true)
-	CPF:EnableKeyboard(false)
-
-
-
-	--mover.Texture = mover:CreateTexture()
-	--mover.Texture:SetAllPoints()
-	--mover.Texture:SetColorTexture(255, 255, 255, 1)
-end
+ColorPickerFrame:SetHeight(340)
+ColorPickerFrame.Content.HexBox:SetPoint("BOTTOMRIGHT", -23, 154)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--@debug@
 function ColorTools:initTestFrame()
 	local r,g,b,a = 1, 0, 0, 1;
 
 	ColortestFrame = CreateFrame("Frame", nil, UIParent)
-	ColortestFrame:SetSize(200, 200)
+	ColortestFrame:SetSize(1000, 1000)
 
-	ColortestFrame:SetPoint("Center", 0, 0)
-	--ColortestFrame:SetPoint("BOTTOMRIGHT", 0, 0)
+	ColortestFrame:SetPoint("CENTER", 0, 0)
 	 
 	ColortestFrame.Texture = ColortestFrame:CreateTexture()
 	ColortestFrame.Texture:SetAllPoints()
@@ -116,49 +66,66 @@ function ColorTools:initTestFrame()
 
 	ColorTestButton = CreateFrame("Button", nil, UIParent)
 	ColorTestButton:SetSize(200, 200)
-	ColorTestButton:SetPoint("Center", 0, 0)
+	ColorTestButton:SetPoint("CENTER", 0, 0)
 	ColorTestButton:SetScript("OnClick", function(self, arg1)
-	    ShowColorPicker(r, g, b, a, myColorCallback);
+	   -- ShowColorPicker(r, g, b, a, myColorCallback);
+
+	   local function OnCancel()
+		print("OnCancel");
+	  end
+		local options = {
+			swatchFunc = myColorCallback,
+			opacityFunc = myColorCallback,
+			cancelFunc = OnCancel,
+			hasOpacity = true,
+			opacity = a,
+			r = r,
+			g = g,
+			b = b,
+		  };
+		
+		  ColorPickerFrame:SetupColorPickerAndShow(options);
 	end)
 
 
 		
 	function ShowColorPicker(r, g, b, a, changedCallback)
-	 ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a;
-	 ColorPickerFrame.previousValues = {r,g,b,a};
-	 ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = 
-	  changedCallback, changedCallback, changedCallback;
-	 ColorPickerFrame:SetColorRGB(r,g,b,a);
-	 --ColorPickerFrame:Hide(); -- Need to run the OnShow handler.
-	 --ColorPickerFrame:Show();
-	 ShowUIPanel(ColorPickerFrame);
+		ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a;
+		ColorPickerFrame.hasOpacity = false
+		ColorPickerFrame.previousValues = {r,g,b,a};
+		ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = 
+			changedCallback, changedCallback, changedCallback;
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r,g,b,a);
+		ShowUIPanel(ColorPickerFrame);
 	end
 
 
 	function myColorCallback(restore)
+	
 
-		local newR, newG, newB, newA;
+		local newR, newG, newB = ColorPickerFrame:GetColorRGB();
+		local newA = ColorPickerFrame:GetColorAlpha();
 		if restore then
 			--print("restore",restore)
 			-- The user bailed, we extract the old color from the table created by ShowColorPicker.
 			newR, newG, newB, newA = unpack(restore);
 		else
 			-- Something changed
-			newA, newR, newG, newB = OpacitySliderFrame:GetValue(), ColorPickerFrame:GetColorRGB();
+			-- TODO
+			--newA, newR, newG, newB = OpacitySliderFrame:GetValue(), ColorPickerFrame:GetColorRGB();
 		end
 
 		-- Update our internal storage.
 		r, g, b, a = newR, newG, newB, newA;
 		-- And update any UI elements that use this color...
 
-		--print(restore, r, g, b, a)
 
 
-		ColortestFrame.Texture:SetColorTexture(r, g, b,  a)
+		ColortestFrame.Texture:SetColorTexture(r, g, b,  newA)
 	end
 
 end
-
+--@end-debug@
 
 
 
@@ -181,18 +148,15 @@ function ColorTools:UpdateCPFRGB(editbox)
 	if cr and cg and cb then
 		-- % based
 		if cr <= 1 and cg <= 1 and cb <= 1 then
-			CPF:SetColorRGB(cr, cg, cb)
+			ColorPickerFrame.Content.ColorPicker:SetColorRGB(cr, cg, cb)
 		-- 0 - 255 based
 		else
 			--print(cr, cg, cb)
-			CPF:SetColorRGB(cr / 255, cg / 255, cb / 255)
+			ColorPickerFrame.Content.ColorPicker:SetColorRGB(cr / 255, cg / 255, cb / 255)
 		end
 	else
 		print('|cffFF0000ColorTools|r: Error converting fields to numbers. Please check the values.')
 	end
-	
-	-- update opacity
-	--OpacitySliderFrame:SetValue(tonumber(editboxes.Alpha:GetText()) / 100)
 end
 
 
@@ -221,27 +185,34 @@ end
 
 
 
+ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()  
 
 
-
-ColorPickerOkayButton:HookScript('OnClick', function()  
+	local function sortColor(colors)
+		return _.reverse(_.sortBy(ColorToolsLastUsed, function(a) return a.sort end))
+	end
 	local r, g, b = ColorPickerFrame:GetColorRGB();
 
+	ColorToolsLastUsed = sortColor(ColorToolsLastUsed)
 
-	local i = 0
-	for k, v in pairs(ColorToolsLastUsed) do
-		i = i + 1
+	if ColorToolsLastUsed[1].color[1] == r and  ColorToolsLastUsed[1].color[2] == g and  ColorToolsLastUsed[1].color[3] == b then 
+		return
 	end
-	local index = i + 1
 
-	ColorToolsLastUsed["usercolor" .. string.format("%03d", index)] = {r, g ,b, 1}
+	tinsert(ColorToolsLastUsed, {
+		sort = time(),
+		color = {r, g ,b, 1}
+	})
+
+	ColorToolsLastUsed = sortColor(ColorToolsLastUsed)
+	ColorToolsLastUsed = _.slice(ColorToolsLastUsed, 1, 20)
 
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 
 end)
 
 
-ColorPickerFrame:HookScript('OnShow', function() 
+ColorPickerFrame:HookScript('OnShow', function(self) 
 	--ColorTools.activeColorPalette = "lastUsedColors"
-	ColorTools:updateColorPalette(); 
+	ColorTools:updateColorPalette();
 end)

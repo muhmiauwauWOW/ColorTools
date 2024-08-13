@@ -4,7 +4,7 @@ local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 
 function ColorTools:createHEXInput(label, position)
 	local f = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsHexInput")
-	f:SetPoint("TOPLEFT", ColorTools.colorSwatchX, ColorTools.colorSwatchY - ColorSwatch:GetHeight() - 5  - position * f.box:GetHeight() )
+	f:SetPoint("TOPLEFT", ColorTools.colorSwatchX, ColorTools.colorSwatchY - 50 - 5  - position * f.box:GetHeight() )
 	f.Label:SetText(label)
 	return f.box
 end
@@ -20,4 +20,4 @@ end
 
 
 ColorPickerFrame:HookScript('OnShow', function() ColorTools:UpdateHEXInput(); end)
-ColorPickerFrame:HookScript('OnColorSelect', function() ColorTools:UpdateHEXInput(); end)
+--ColorPickerFrame:HookScript('OnColorSelect', function() ColorTools:UpdateHEXInput(); end)

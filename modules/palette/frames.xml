@@ -14,21 +14,12 @@
 
 
 	<ScrollFrame name="ColorToolsPaletteScrollFrame" parent="ColorPickerFrame" inherits="UIPanelScrollFrameCodeTemplate">
+		<Size x="190" y="100"/>
 		<Anchors>
-			<Anchor point="TOPLEFT" x="25" y="-190"/>
-			<Anchor point="BOTTOMRIGHT" x="-25" y="35"/>
+			<Anchor point="TOPLEFT" x="25" y="-200"/>
 		</Anchors>
-		<Frames>
-			<Slider parentKey="ScrollBar" inherits="MinimalScrollBarTemplate">
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="2" y="-15"/>
-					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="2" y="15"/>
-				</Anchors>
-			</Slider>
-		</Frames>
-
 		<ScrollChild>
-			<Frame parentKey="Contents"   parent="ColorToolsPaletteScrollFrame" >
+			<Frame parentKey="Contents" parent="ColorToolsPaletteScrollFrame" >
 				<Anchors>
 					<Anchor point="TOPLEFT" x="0" y="0"/>
 					<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
@@ -38,8 +29,7 @@
 		</ScrollChild>
 		<Scripts>
 			<OnLoad>
-				self.scrollBarHideable = false;
-				self.ScrollBar.trackBG:SetAlpha(0.0);
+				self.scrollBarHideable = true;
 				ScrollFrame_OnLoad(self);
 			</OnLoad>
 		</Scripts>

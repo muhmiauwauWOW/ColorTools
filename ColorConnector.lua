@@ -35,7 +35,7 @@ ColorTools.colorPalettes["lastUsedColors"] = {
 
 ColorTools.colorPalettes["classColors"] = {
 	order = 1,
-	name = "Class Colors",
+	name = L["classColors"],
 	colors = CLASS_ICON_TCOORDS
 }
 

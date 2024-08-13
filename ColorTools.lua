@@ -112,7 +112,7 @@ function ColorTools:initTestFrame()
 		else
 			-- Something changed
 			-- TODO
-			--newA, newR, newG, newB = OpacitySliderFrame:GetValue(), ColorPickerFrame:GetColorRGB();
+			--newA, newR, newG, newB = ColorPickerFrame:GetColorAlpha(), ColorPickerFrame:GetColorRGB();
 		end
 
 		-- Update our internal storage.

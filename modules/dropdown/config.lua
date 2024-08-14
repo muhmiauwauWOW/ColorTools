@@ -1,41 +1,30 @@
 local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
-
+local _ = LibStub("Lodash"):Get()
 
 local function createDropdown(opts)
-    local dropdown_name = '$parent_ColorTools_dropdown'
     local menu_items = opts['items'] or {}
-    local default_val = opts['defaultVal'] or ''
-    local change_func = opts['changeFunc'] or function (dropdown_val) end
+    local change_func = opts['changeFunc'] or function(dropdown_val) end
+    
+    local dropdown = CreateFrame("DropdownButton", '$parent_ColorTools_dropdown', ColorPickerFrame, "WowStyle1DropdownTemplate")
+    dropdown:SetPoint("TOPLEFT", 25, -170);
+    dropdown:SetWidth(200);
 
-    local dropdown = CreateFrame("Frame", dropdown_name, ColorPickerFrame, 'UIDropDownMenuTemplate')
+    local options = {} 
+    local selectedValue = ColorTools.activeColorPalette
+    _.forEach(menu_items, function(v) tinsert(options, {v.name, v.key}) end)
 
-    UIDropDownMenu_SetWidth(dropdown, 160)
-    UIDropDownMenu_SetText(dropdown, default_val)
-
-    UIDropDownMenu_Initialize(dropdown, function(self, level, _)
-        local info = UIDropDownMenu_CreateInfo()
-
-        for order, val in pairs(menu_items) do
-            info.text = val.name;
-            info.checked = (val.key == ColorTools.activeColorPalette) 
-            info.menuList= val.key
-            info.hasArrow = false
-            info.func = function(b)
-                UIDropDownMenu_SetSelectedValue(dropdown, b.value, b.value)
-                UIDropDownMenu_SetText(dropdown, b.value)
-                b.checked = true
-                change_func(dropdown, b.menuList)
-            end
-            UIDropDownMenu_AddButton(info)
-        end
-    end)
-
-    dropdown:SetPoint("TOPLEFT", 5, -170);
-    return dropdown
+    MenuUtil.CreateRadioMenu(dropdown,
+        function(value)
+            return value == selectedValue
+        end, 
+        function(value)
+            selectedValue = value
+            change_func(dropdown, selectedValue)
+        end,
+        unpack(options)
+    )
 end
-
-
 
  function ColorTools:initDropdown()
 	local dropdown_opts = {
@@ -47,33 +36,14 @@ end
 	    end
 	}
 
-
-  
-    function getKeysSortedByValue(tbl, sortFunction)
-        local keys = {}
-        for key in pairs(tbl) do
-            table.insert(keys, key)
-        end
-
-        table.sort(keys, function(a, b)
-            return sortFunction(tbl[a], tbl[b])
-        end)
-        return keys
-    end
-
-
-    local sortedKeys = getKeysSortedByValue(ColorTools.colorPalettes, function(a, b) 
-        return a.order < b.order
+    _.forEach(ColorTools.colorPalettes, function(v, k)
+        table.insert(dropdown_opts["items"], {
+            order = v.order,
+            key = k,
+            name = v.name
+        })
     end)
 
-
-
-    for k, v in pairs(sortedKeys) do
-      dropdown_opts["items"][k] = {
-            key = v,
-            name = ColorTools.colorPalettes[v].name
-        }
-    end
-
-	colorDropdown = createDropdown(dropdown_opts)
+    table.sort(dropdown_opts["items"], function (a, b) return a.order < b.order end)
+    createDropdown(dropdown_opts)
 end

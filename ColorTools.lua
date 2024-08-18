@@ -20,117 +20,13 @@ function ColorTools:OnInitialize()
 	end
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 
-	--@debug@
-		local name, realm = UnitName("player")
-		if(name == "Muhmiauwaudk") then 
-			ColorTools:initTestFrame()
-		end
-	--@end-debug@
-
 	ColorTools:initRGBInputs()
 	ColorTools:initDropdown()
 
 end 
 
-function ColorTools:OnEnable()
-    -- Called when the addon is enabled
-end
-
-function ColorTools:OnDisable()
-    -- Called when the addon is disabled
-end
-
-
 ColorPickerFrame:SetHeight(340)
 ColorPickerFrame.Content.HexBox:SetPoint("BOTTOMRIGHT", -23, 134)
-
-
-
-
-
---@debug@
-function ColorTools:initTestFrame()
-	local r,g,b,a = 1, 0, 0, 1;
-
-	ColortestFrame = CreateFrame("Frame", nil, UIParent)
-	ColortestFrame:SetSize(1000, 1000)
-
-	ColortestFrame:SetPoint("CENTER", 0, 0)
-	 
-	ColortestFrame.Texture = ColortestFrame:CreateTexture()
-	ColortestFrame.Texture:SetAllPoints()
-	ColortestFrame.Texture:SetColorTexture(r, g, b, a)
-
-	
-
-
-	ColorTestButton = CreateFrame("Button", nil, UIParent)
-	ColorTestButton:SetSize(200, 200)
-	ColorTestButton:SetPoint("CENTER", 0, 0)
-	ColorTestButton:SetScript("OnClick", function(self, arg1)
-	   -- ShowColorPicker(r, g, b, a, myColorCallback);
-
-	   local function OnCancel()
-		print("OnCancel");
-	  end
-		local options = {
-			swatchFunc = myColorCallback,
-			opacityFunc = myColorCallback,
-			cancelFunc = OnCancel,
-			hasOpacity = true,
-			opacity = a,
-			r = r,
-			g = g,
-			b = b,
-		  };
-		
-		  ColorPickerFrame:SetupColorPickerAndShow(options);
-	end)
-
-
-		
-	function ShowColorPicker(r, g, b, a, changedCallback)
-		ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a;
-		ColorPickerFrame.hasOpacity = false
-		ColorPickerFrame.previousValues = {r,g,b,a};
-		ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = 
-			changedCallback, changedCallback, changedCallback;
-		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r,g,b,a);
-		ShowUIPanel(ColorPickerFrame);
-	end
-
-
-	function myColorCallback(restore)
-	
-
-		local newR, newG, newB = ColorPickerFrame:GetColorRGB();
-		local newA = ColorPickerFrame:GetColorAlpha();
-		if restore then
-			--print("restore",restore)
-			-- The user bailed, we extract the old color from the table created by ShowColorPicker.
-			newR, newG, newB, newA = unpack(restore);
-		else
-			-- Something changed
-			-- TODO
-			--newA, newR, newG, newB = ColorPickerFrame:GetColorAlpha(), ColorPickerFrame:GetColorRGB();
-		end
-
-		-- Update our internal storage.
-		r, g, b, a = newR, newG, newB, newA;
-		-- And update any UI elements that use this color...
-
-
-
-		ColortestFrame.Texture:SetColorTexture(r, g, b,  newA)
-	end
-
-end
---@end-debug@
-
-
-
-
-
 
 
 function ColorTools:UpdateCPFRGB(editbox)
@@ -151,7 +47,6 @@ function ColorTools:UpdateCPFRGB(editbox)
 			ColorPickerFrame.Content.ColorPicker:SetColorRGB(cr, cg, cb)
 		-- 0 - 255 based
 		else
-			--print(cr, cg, cb)
 			ColorPickerFrame.Content.ColorPicker:SetColorRGB(cr / 255, cg / 255, cb / 255)
 		end
 	else

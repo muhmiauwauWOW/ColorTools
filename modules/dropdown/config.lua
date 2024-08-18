@@ -6,9 +6,10 @@ local function createDropdown(opts)
     local menu_items = opts['items'] or {}
     local change_func = opts['changeFunc'] or function(dropdown_val) end
     
-    local dropdown = CreateFrame("DropdownButton", '$parent_ColorTools_dropdown', ColorPickerFrame, "WowStyle1DropdownTemplate")
+    local dropdown = CreateFrame("DropdownButton", 'ColorTools_dropdown', ColorPickerFrame, "WowStyle1DropdownTemplate")
     dropdown:SetPoint("TOPLEFT", 25, -170);
     dropdown:SetWidth(200);
+
 
     local options = {} 
     local selectedValue = ColorTools.activeColorPalette
@@ -24,7 +25,19 @@ local function createDropdown(opts)
         end,
         unpack(options)
     )
+
+    -- ugly fix for AceGUI 
+    local function OnShow()
+        dropdown.menu:SetFrameStrata("TOOLTIP")
+	end
+
+    dropdown:RegisterCallback(DropdownButtonMixin.Event.OnMenuOpen, OnShow);
+
 end
+
+
+
+
 
  function ColorTools:initDropdown()
 	local dropdown_opts = {

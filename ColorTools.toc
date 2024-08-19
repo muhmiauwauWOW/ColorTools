@@ -18,15 +18,20 @@ locale/locale.xml
 ColorTools.lua
 ColorConnector.lua
 
-#modules\rgbInputs\mixins.lua
 modules\rgbInputs\frames.xml
 modules\rgbInputs\config.lua
 
-modules\dropdown\frames.xml
-modules\dropdown\config.lua
+modules\hsvInputs\frames.xml
+modules\hsvInputs\config.lua
 
-modules\palette\frames.xml
-modules\palette\config.lua
+
+##modules\dropdown\frames.xml
+##modules\dropdown\config.lua
+
+
+# TODO Use Framepool
+#modules\palette\frames.xml
+#modules\palette\config.lua
 
 
 test.lua

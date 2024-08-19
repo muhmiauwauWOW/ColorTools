@@ -9,6 +9,7 @@ function ColorToolsRgbInputEditboxMixin:OnLoad()
 end
 function ColorToolsRgbInputEditboxMixin:OnEscapePressed()
 	self:ClearFocus()
+    ColorTools:UpdateCPFRGB(self)
 end
 
 function ColorToolsRgbInputEditboxMixin:OnEditFocusGained()
@@ -17,14 +18,16 @@ end
 
 function ColorToolsRgbInputEditboxMixin:OnEditFocusLost()
 	self:HighlightText(self:GetNumLetters())
+    ColorTools:UpdateCPFRGB(self)
 end
 
 function ColorToolsRgbInputEditboxMixin:OnEnterPressed()
 	self:ClearFocus() 
+    ColorTools:UpdateCPFRGB(self)
 end
 
 function ColorToolsRgbInputEditboxMixin:OnTextChanged()
-	ColorTools:UpdateCPFRGB(self)
+	--ColorTools:UpdateCPFRGB(self)
 end
 function ColorToolsRgbInputEditboxMixin:SetRGBNumber(value)
     if not value then return end

@@ -17,7 +17,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString parentKey="Hash" inherits="GameFontNormalLarge" text="sss">
+						<FontString parentKey="Hash" inherits="GameFontNormalLarge" text="">
 							<Anchors>
 								<Anchor point="LEFT"/>
 							</Anchors>
@@ -31,7 +31,6 @@
 					<OnEditFocusGained method="OnEditFocusGained"/>
 					<OnEditFocusLost method="OnEditFocusLost"/>
 					<OnEnterPressed method="OnEnterPressed"/>
-					<OnTextChanged method="OnTextChanged"/>
 				</Scripts>
 			</EditBox>
 		</Frames>

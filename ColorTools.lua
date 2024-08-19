@@ -3,6 +3,10 @@ local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("Lodash"):Get()
 
 
+
+ColorTools.rbgTable =  {"R", "G", "B"}
+
+
 ColorTools.colorPalettes = {}
 
 ColorTools.activeColorPalette =  "lastUsedColors"
@@ -30,16 +34,8 @@ ColorPickerFrame.Content.HexBox:SetPoint("BOTTOMRIGHT", -23, 134)
 
 
 function ColorTools:UpdateCPFRGB(editbox)
-	local cr, cg, cb
-	-- hex value
-	if #editbox:GetText() == 6 then 
-		local rgb = editbox:GetText()
-		cr, cg, cb = tonumber('0x'..strsub(rgb, 0, 2)), tonumber('0x'..strsub(rgb, 3, 4)), tonumber('0x'..strsub(rgb, 5, 6))
-	-- numerical value
-	else
-		cr, cg, cb = tonumber(ColorTools.editboxes["r"]:GetNumber()), tonumber(ColorTools.editboxes["g"]:GetNumber()), tonumber(ColorTools.editboxes["b"]:GetNumber())
-	end
-	
+	local cr, cg, cb = tonumber(ColorTools.editboxes["R"]:GetNumber()), tonumber(ColorTools.editboxes["G"]:GetNumber()), tonumber(ColorTools.editboxes["B"]:GetNumber())
+
 	-- lazy way to prevent most errors with invalid entries (letters)
 	if cr and cg and cb then
 		-- % based
@@ -58,24 +54,6 @@ end
 
 
 
-
-
-
-
-function round(num, numDecimalPlaces)
-    local mult = 10^(numDecimalPlaces or 0)
-    return math.floor(num * mult + 0.5) / mult
-end
-
-function ColorTools:getColor255(c)
-	return round(c * 255)
-end
-
-
-
-function dump(arg)
-	DevTools_Dump(arg)
-end
 
 
 
@@ -108,7 +86,43 @@ ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()
 end)
 
 
+ColorPickerFrame:HookScript('OnLoad', function(self) 
+	--ColorTools.activeColorPalette = "lastUsedColors"
+
+	if self.hasOpacity then
+    	
+
+	   self.Content:SetWidth(388);
+
+	   self.Content:SetPoint("BOTTOMRIGHT", ColorPickerFrame, "BOTTOMRIGHT", -80, 0 )
+	 --  self.Content:ClearPoint("BOTTOMRIGHT")
+       self:SetWidth(388 + 80);
+    else
+        self.Content.ColorPicker:SetWidth(200);
+        self:SetWidth(331 + 80);
+    end
+	
+
+	ColorTools:updateColorPalette();
+end)
+
+
 ColorPickerFrame:HookScript('OnShow', function(self) 
 	--ColorTools.activeColorPalette = "lastUsedColors"
-	ColorTools:updateColorPalette();
+
+	if self.hasOpacity then
+    	
+
+	   self.Content:SetWidth(388);
+
+	   self.Content:SetPoint("BOTTOMRIGHT", ColorPickerFrame, "BOTTOMRIGHT", -80, 0 )
+	 --  self.Content:ClearPoint("BOTTOMRIGHT")
+       self:SetWidth(388 + 80);
+    else
+        self.Content.ColorPicker:SetWidth(200);
+        self:SetWidth(331 + 80);
+    end
+	
+
+	--ColorTools:updateColorPalette();
 end)

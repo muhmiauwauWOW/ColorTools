@@ -1,43 +1,70 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\FrameXML\UI.xsd">
 
-	<Frame name="ColorToolsRgbInput"  virtual="true">
-		<Size x="50" y="30"/>
+	<Script file="mixins.lua"/>
+
+
+
+
+
+	<Frame name="ColorToolsRgbInputFrameTemplate" mixin="ColorToolsRgbInputMixin" virtual="true">
+		<Size x="45" y="22"/>
+		<Frames>
+			<EditBox parentKey="box" inherits="InputBoxInstructionsTemplate" mixin="ColorToolsRgbInputEditboxMixin"  autoFocus="false" hidden="false" letters="3" numeric="true">	
+				<Size x="45" y="22"/>
+				<Anchors>
+					<Anchor point="TOP" />
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString parentKey="Hash" inherits="GameFontNormalLarge" text="sss">
+							<Anchors>
+								<Anchor point="LEFT"/>
+							</Anchors>
+							<Color r="0.6" g="0.6" b="0.6" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnEscapePressed method="OnEscapePressed"/>
+					<OnEditFocusGained method="OnEditFocusGained"/>
+					<OnEditFocusLost method="OnEditFocusLost"/>
+					<OnEnterPressed method="OnEnterPressed"/>
+					<OnTextChanged method="OnTextChanged"/>
+				</Scripts>
+			</EditBox>
+		</Frames>
+	</Frame> 
+
+<!-- 
+	<Frame name="ColorToolsRgbInputFrameTemplate" mixin="ColorToolsRgbInputMixin"   virtual="true">
+		<Size x="73" y="22"/>
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString parentKey="Label" justifyH="LEFT" justifyV="MIDDLE" inherits="GameFontNormal" setAllPoints="true">
 					<Color r="1" g="1" b="1"/>
 					<Anchors>
-						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="-5" y="0"/>
+						<Anchor point="RIGHT" relativeKey="$parent" relativePoint="LEFT" x="5" y="0"/>
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<EditBox parentKey="box" inherits="InputBoxInstructionsTemplate" autoFocus="false" hidden="false" letters="3" numeric="true">
-				<Size x="28" y="30"/>
+			<EditBox parentKey="box" inherits="InputBoxInstructionsTemplate" mixin="ColorToolsRgbInputEditboxMixin"  autoFocus="false" hidden="false" letters="3" numeric="true">
+				<Size x="28" y="22"/>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent" relativePoint="TOPLEFT" x="5" y="0"/>
+					<Anchor point="RIGHT" relativeKey="$parent" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnEscapePressed>
-						self:ClearFocus()
-					</OnEscapePressed>
-					<OnEditFocusGained>
-						self:HighlightText(0, self:GetNumLetters())
-					</OnEditFocusGained>
-					<OnEditFocusLost>
-						self:HighlightText(self:GetNumLetters())
-					</OnEditFocusLost>
-					<OnEnterPressed>
-						self:ClearFocus() 
-					</OnEnterPressed>
-					<OnTextChanged>
-						ColorTools:UpdateCPFRGB(self)
-					</OnTextChanged>
+					<OnEscapePressed method="OnEscapePressed"/>
+					<OnEditFocusGained method="OnEditFocusGained"/>
+					<OnEditFocusLost method="OnEditFocusLost"/>
+					<OnEnterPressed method="OnEnterPressed"/>
+					<OnTextChanged method="OnTextChanged"/>
 				</Scripts>
 			</EditBox>
 		</Frames>
-	</Frame>
+	</Frame> -->
 
 </Ui>

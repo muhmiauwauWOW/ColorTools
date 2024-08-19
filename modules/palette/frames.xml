@@ -14,9 +14,9 @@
 
 
 	<ScrollFrame name="ColorToolsPaletteScrollFrame" parent="ColorPickerFrame" inherits="UIPanelScrollFrameCodeTemplate">
-		<Size x="190" y="100"/>
 		<Anchors>
-			<Anchor point="TOPLEFT" x="25" y="-200"/>
+			<Anchor point="BOTTOMLEFT" x="23" y="44"/>
+			<Anchor point="BOTTOMRIGHT" x="-33" y="44"/>
 		</Anchors>
 		<ScrollChild>
 			<Frame parentKey="Contents" parent="ColorToolsPaletteScrollFrame" >
@@ -25,7 +25,6 @@
 					<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
 				</Anchors>
 			</Frame>
-
 		</ScrollChild>
 		<Scripts>
 			<OnLoad>

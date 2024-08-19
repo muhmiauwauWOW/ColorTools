@@ -34,6 +34,9 @@
         "DropdownButtonMixin",
         "Settings",
         "SettingsControlMixin",
-        "SettingsPanel"
+        "SettingsPanel",
+        "WeeklyRewardActivityItemMixin",
+        "ColorPickerHexBoxMixin",
+        "COLOR_PICKER_HEX"
     ]
 }

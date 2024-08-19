@@ -18,6 +18,7 @@ locale/locale.xml
 ColorTools.lua
 ColorConnector.lua
 
+#modules\rgbInputs\mixins.lua
 modules\rgbInputs\frames.xml
 modules\rgbInputs\config.lua
 
@@ -26,3 +27,6 @@ modules\dropdown\config.lua
 
 modules\palette\frames.xml
 modules\palette\config.lua
+
+
+test.lua

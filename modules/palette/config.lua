@@ -23,10 +23,16 @@ end
 local colorSwatches = {}
 
 -- setWidth of scroll child
-ColorToolsPaletteScrollFrame.Contents:SetWidth(ColorToolsPaletteScrollFrame:GetWidth())
+--ColorToolsPaletteScrollFrame.Contents:SetWidth(ColorToolsPaletteScrollFrame:GetWidth())
 
 
-function ColorTools:updateColorPalette()
+function ColorTools:updateColorPalette(width)
+	
+	print(updateColorPalette,width)
+	ColorToolsPaletteScrollFrame:SetWidth(width)
+
+	ColorToolsPaletteScrollFrame.Contents:SetWidth(width)
+
 
 	local colors = ColorTools.colorPalettes[ColorTools.activeColorPalette].colors
 
@@ -63,6 +69,15 @@ function ColorTools:updateColorPalette()
 	end	
 
 
+	local fWidth = 388 + 80
+
+	local swatchSpace = (swatchSize + spacer)
+	print(fWidth, swatchSpace , math.floor(fWidth/swatchSpace))
+
+	cols = math.floor(fWidth/swatchSpace)
+
+	ColorToolsPaletteScrollFrame:SetHeight(100)
+
 	-- update height on scroll child
 	local height = math.floor(i / cols) * (swatchSize + spacer) + swatchSize;
 	ColorToolsPaletteScrollFrame.Contents:SetHeight(height)
@@ -90,6 +105,8 @@ function ColorTools:createColorPaletteButton(color, index)
 	local r, g, b, a = unpack(color);
 
 	index = index - 1;
+
+
 	
 	row = math.floor(index / cols)
 	x = (index - (row * cols)) * (swatchSize + spacer)

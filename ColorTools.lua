@@ -19,6 +19,7 @@ ColorTools.colorSwatchY = -32;
 
 
 
+
 function ColorTools:OnInitialize()
 	if ColorToolsLastUsed == nil then 
 		ColorToolsLastUsed = {}
@@ -28,11 +29,11 @@ function ColorTools:OnInitialize()
 	ColorTools:initRGBInputs()
 	ColorTools:initHSVInputs()
 
-	-- ColorTools:initDropdown()
+	ColorTools:initDropdown()
 
 end 
 
---ColorPickerFrame:SetHeight(340)
+ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() +  80)
 --ColorPickerFrame.Content.HexBox:SetPoint("BOTTOMRIGHT", -23, 134)
 
 

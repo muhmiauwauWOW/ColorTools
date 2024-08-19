@@ -3,7 +3,7 @@
 
 function ColorTools:createHSVInput(label, position)
 	local f = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsHSVInputFrameTemplate")
-	f:SetPoint("TOPLEFT", ColorPickerFrame.Content.HexBox, "BOTTOMLEFT", 60, 20 - (position * 30) )
+	f:SetPoint("TOPLEFT", ColorPickerFrame.Content.HexBox, "BOTTOMLEFT", 57, 22 - (position * 26) )
 	f.box.Hash:SetText(label)
 	f.box.name = label
 	return f.box
@@ -18,12 +18,8 @@ function ColorTools:initHSVInputs()
 end
 
 function ColorTools:UpdateHSVInputs()
-	print(ColorPickerFrame.Content.ColorPicker:GetColorHSV())
 	table.foreach({ColorPickerFrame.Content.ColorPicker:GetColorHSV()}, function(k, v)
-		if k ~= "x" then
-			v = v * 100
-		end 
-		
+		if k ~= "x" then v = v * 100 end 
 		ColorTools.editboxes[ColorTools.hsvTable[k]]:SetNumber(math.floor(v))
 	end)
 end

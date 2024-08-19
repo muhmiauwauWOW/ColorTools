@@ -3,7 +3,7 @@
 
 function ColorTools:createRGBInput(label, position)
 	local f = CreateFrame("Frame", nil, ColorPickerFrame, "ColorToolsRgbInputFrameTemplate")
-	f:SetPoint("TOPLEFT", ColorPickerFrame.Content.HexBox, "BOTTOMLEFT", 0, 20 - (position * 30) )
+	f:SetPoint("TOPLEFT", ColorPickerFrame.Content.HexBox, "BOTTOMLEFT", 0, 22 - (position * 26) )
 	f.box.Hash:SetText(label)
 	f.box.name = label
 	return f.box
@@ -11,7 +11,7 @@ end
 
 function ColorTools:initRGBInputs()
 	ColorPickerFrame.Content.HexBox:ClearAllPoints()
-	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -35, -37)
+	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -33, -37)
 
 	table.foreach(ColorTools.rbgTable, function(k,v)
 		ColorTools.editboxes[v] = ColorTools:createRGBInput(v, k)

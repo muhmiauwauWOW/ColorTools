@@ -7,8 +7,8 @@ local function createDropdown(opts)
     local change_func = opts['changeFunc'] or function(dropdown_val) end
     
     local dropdown = CreateFrame("DropdownButton", 'ColorTools_dropdown', ColorPickerFrame, "WowStyle1DropdownTemplate")
-    dropdown:SetPoint("TOPLEFT", 25, -170);
-    dropdown:SetWidth(200);
+    dropdown:SetPoint("TOPRIGHT", -23, -210 + 44 + dropdown:GetHeight());
+    dropdown:SetWidth(170);
 
 
     local options = {} 
@@ -40,6 +40,8 @@ end
 
 
  function ColorTools:initDropdown()
+
+
 	local dropdown_opts = {
 	    ['items'] = {},
 	    ['defaultVal'] = ColorTools.colorPalettes[ColorTools.activeColorPalette].name, 

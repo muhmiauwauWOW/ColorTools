@@ -25,8 +25,8 @@ modules\hsvInputs\frames.xml
 modules\hsvInputs\config.lua
 
 
-##modules\dropdown\frames.xml
-##modules\dropdown\config.lua
+modules\dropdown\frames.xml
+modules\dropdown\config.lua
 
 
 # TODO Use Framepool

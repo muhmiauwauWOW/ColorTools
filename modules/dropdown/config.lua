@@ -1,19 +1,16 @@
-local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
-local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
-local _ = LibStub("Lodash"):Get()
 
 local function createDropdown(opts)
     local menu_items = opts['items'] or {}
     local change_func = opts['changeFunc'] or function(dropdown_val) end
     
     local dropdown = CreateFrame("DropdownButton", 'ColorTools_dropdown', ColorPickerFrame, "WowStyle1DropdownTemplate")
-    dropdown:SetPoint("TOPLEFT", 25, -170);
-    dropdown:SetWidth(200);
+    dropdown:SetPoint("TOPRIGHT", -23, -210 + 44 + dropdown:GetHeight());
+    dropdown:SetWidth(170);
 
 
     local options = {} 
     local selectedValue = ColorTools.activeColorPalette
-    _.forEach(menu_items, function(v) tinsert(options, {v.name, v.key}) end)
+    table.foreach(menu_items, function(k,v) tinsert(options, {v.name, v.key}) end)
 
     MenuUtil.CreateRadioMenu(dropdown,
         function(value)
@@ -40,6 +37,8 @@ end
 
 
  function ColorTools:initDropdown()
+
+
 	local dropdown_opts = {
 	    ['items'] = {},
 	    ['defaultVal'] = ColorTools.colorPalettes[ColorTools.activeColorPalette].name, 
@@ -49,7 +48,7 @@ end
 	    end
 	}
 
-    _.forEach(ColorTools.colorPalettes, function(v, k)
+    table.foreach(ColorTools.colorPalettes, function(k, v)
         table.insert(dropdown_opts["items"], {
             order = v.order,
             key = k,

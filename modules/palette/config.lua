@@ -1,109 +1,64 @@
-local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
-local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
-
 local swatchSize = 32;
 local spacer = 5
-local cols = 5
+local swatchSpace = swatchSize + spacer
+local cols
+
+local scrollheight = swatchSpace * 2
 
 
-local function pairsByKeys (t, f)
-    local a = {}
-    for n in pairs(t) do table.insert(a, n) end
-    table.sort(a, f)
-    local i = 0      -- iterator variable
-    local iter = function ()   -- iterator function
-        i = i + 1
-        if a[i] == nil then return nil
-        else return a[i], t[a[i]]
-        end
-    end
-    return iter
+function ColorTools:initColorPalette()
+	
+	self.Palette = CreateFramePool("Button", ColorToolsPaletteScrollFrame.Contents, "ColorToolsColorButton", nil, nil, function(f)
+
+		f.checkerboard = f:CreateTexture(nil, "BACKGROUND")
+		f.checkerboard:SetAllPoints()
+		f.checkerboard:SetAtlas("colorpicker-checkerboard", true)
+		f.checkerboard:SetTexCoord(0, 1, 0, 0.25)
+
+		f.Color = f:CreateTexture(nil, "ARTWORK")
+		f.Color:SetAllPoints()
+		f.Color:SetColorTexture(1, 0, 1, 1)
+
+
+		f:SetScript("OnClick", function(self, arg1)
+			ColorPickerFrame.Content.ColorPicker:SetColorRGB(self.color[1], self.color[2], self.color[3]);
+			if ColorTools.hasOpacity then
+				ColorPickerFrame.Content.ColorPicker:SetColorAlpha(self.color[4])
+			end
+		end)
+		
+		return f
+	end)
 end
 
-local colorSwatches = {}
+function ColorTools:updateColorPalette(width)
 
--- setWidth of scroll child
-ColorToolsPaletteScrollFrame.Contents:SetWidth(ColorToolsPaletteScrollFrame:GetWidth())
-
-
-function ColorTools:updateColorPalette()
-
-	local colors = ColorTools.colorPalettes[ColorTools.activeColorPalette].colors
-
-	-- hide all present ColorSwatches
-	for k, v in pairs(colorSwatches) do
-		colorSwatches[k]:Hide()
+	if width then
+		ColorToolsPaletteScrollFrame:SetWidth(width)
+		ColorToolsPaletteScrollFrame.Contents:SetWidth(width)
+		ColorToolsPaletteScrollFrame:SetHeight(scrollheight)
+		cols = math.floor(width/swatchSpace) - 1
 	end
 
-	local i = 1
+	self.Palette:ReleaseAll();
+	local colors = ColorTools.colorPalettes[ColorTools.activeColorPalette].colors
 
-
-	local sortFunc = function(a, b) return a < b end
-
-	
-
-	for k, v in pairsByKeys(colors, sortFunc) do
-		if colorSwatches[i] == nil then 
-			-- create new color swatch
-			if ColorTools.activeColorPalette == "lastUsedColors" then 
-				table.insert(colorSwatches, ColorTools:createColorPaletteButton(colors[k].color, i, pFrame));
-			else
-				table.insert(colorSwatches, ColorTools:createColorPaletteButton(colors[k], i, pFrame));
-			end
-		else
-			-- update existing color swatch
-			if ColorTools.activeColorPalette == "lastUsedColors" then 
-				ColorTools:upodateColorPaletteButton(colors[k].color, colorSwatches[i])
-			else
-				ColorTools:upodateColorPaletteButton(colors[k], colorSwatches[i])
-			end
-
-		end
-		i = i + 1;
-	end	
-
-
-	-- update height on scroll child
-	local height = math.floor(i / cols) * (swatchSize + spacer) + swatchSize;
+	-- set child height
+	local height = math.ceil(#colors / cols) * swatchSpace;
 	ColorToolsPaletteScrollFrame.Contents:SetHeight(height)
-
-
-end
-
-
-function ColorTools:upodateColorPaletteButton(color, frame)
-	local r, g, b, a = unpack(color);
-
-	frame.Texture:SetColorTexture(r, g, b)
-	frame:SetScript("OnClick", function (self, button, down)
-		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b);
-	end);
-
-	frame:Show();
-end
-
-
-
-
-
-function ColorTools:createColorPaletteButton(color, index)
-	local r, g, b, a = unpack(color);
-
-	index = index - 1;
 	
-	row = math.floor(index / cols)
-	x = (index - (row * cols)) * (swatchSize + spacer)
-	y = row * (swatchSize + spacer)
+	function getPos(type, index)
+		index = index -1
+		local row = math.floor(index / cols) 
+		if type == "y" then return row* swatchSpace end
+		return (index - (row * cols)) *  swatchSpace
+	end
 
-	local f = CreateFrame("Button", nil, ColorToolsPaletteScrollFrame.Contents, "ColorToolsColorButton")
-	f:SetPoint("TOPLEFT", x, -y )
-	f.Texture = f:CreateTexture()
-	f.Texture:SetAllPoints()
-	f.Texture:SetColorTexture(r, g, b)
-
-	f:SetScript("OnClick", function (self, button, down)
-		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b);
-	end);
-
-	return f;
+	table.foreach(colors, function(k, v)
+		local frame = self.Palette:Acquire()
+		frame:SetPoint("TOPLEFT", ColorToolsPaletteScrollFrame.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
+		frame.Color:SetColorTexture(table.unpack(v.color))
+		frame.color = v.color
+		frame:Show()
+	end)
 end

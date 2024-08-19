@@ -11,7 +11,7 @@ end
 
 function ColorTools:initRGBInputs()
 	ColorPickerFrame.Content.HexBox:ClearAllPoints()
-	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -33, -37)
+	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -35, -35)
 
 	table.foreach(ColorTools.rbgTable, function(k,v)
 		ColorTools.editboxes[v] = ColorTools:createRGBInput(v, k)

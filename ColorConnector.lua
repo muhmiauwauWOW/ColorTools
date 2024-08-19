@@ -25,6 +25,25 @@ function covertColors(colors)
 end
 
 
+function covertColors2(colors)
+	local newColors = {};
+	
+	table.foreach(colors,function(k,v) 
+
+		table.insert(newColors, {
+			sort = k,
+			color = v
+		})
+
+
+
+	end)
+
+
+	return newColors;
+
+end
+
 
 
 ColorTools.colorPalettes["lastUsedColors"] = {
@@ -33,31 +52,52 @@ ColorTools.colorPalettes["lastUsedColors"] = {
 	colors = {}
 }
 
+
+local classColors = {}
+do
+	local classes = {"HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "ROGUE", "DRUID", "SHAMAN", "WARRIOR", "DEATHKNIGHT", "MONK", "DEMONHUNTER", "EVOKER"};
+
+	for i, className in ipairs(classes) do
+		local classColor = C_ClassColor.GetClassColor(className);
+		table.insert(classColors, {
+			sort = i,
+			color = {
+				classColor.r,
+				classColor.g,
+				classColor.b,
+				1
+			}
+		})
+	end
+end
+
+
 ColorTools.colorPalettes["classColors"] = {
 	order = 1,
 	name = L["classColors"],
-	colors = CLASS_ICON_TCOORDS
+	colors = classColors
 }
-
 
 
 ColorTools.colorPalettes["powerBarColor"] = {
 	order = 2,
 	name = L["powerBarColor"],
-	colors = covertColors(PowerBarColor)
+	colors = covertColors2(covertColors(PowerBarColor))
 }
 
 
 ColorTools.colorPalettes["objectiveTrackerColor"] = {
 	order = 2,
 	name = L["objectiveTrackerColor"],
-	colors = covertColors(OBJECTIVE_TRACKER_COLOR)
+	colors = covertColors2(covertColors(OBJECTIVE_TRACKER_COLOR))
 }
 
 
 ColorTools.colorPalettes["debuffTypeColor"] = {
 	order = 2,
 	name = L["debuffTypeColor"],
-	colors = covertColors(DebuffTypeColor)
+	colors = covertColors2(covertColors(DebuffTypeColor))
 }
+
+
 

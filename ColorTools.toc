@@ -24,14 +24,10 @@ modules\rgbInputs\config.lua
 modules\hsvInputs\frames.xml
 modules\hsvInputs\config.lua
 
-
 modules\dropdown\frames.xml
 modules\dropdown\config.lua
 
 
-# TODO Use Framepool
-#modules\palette\frames.xml
-#modules\palette\config.lua
+modules\palette\frames.xml
+modules\palette\config.lua
 
-
-test.lua

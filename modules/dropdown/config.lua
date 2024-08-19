@@ -1,6 +1,3 @@
-local ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
-local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
-local _ = LibStub("Lodash"):Get()
 
 local function createDropdown(opts)
     local menu_items = opts['items'] or {}
@@ -13,7 +10,7 @@ local function createDropdown(opts)
 
     local options = {} 
     local selectedValue = ColorTools.activeColorPalette
-    _.forEach(menu_items, function(v) tinsert(options, {v.name, v.key}) end)
+    table.foreach(menu_items, function(k,v) tinsert(options, {v.name, v.key}) end)
 
     MenuUtil.CreateRadioMenu(dropdown,
         function(value)
@@ -51,7 +48,7 @@ end
 	    end
 	}
 
-    _.forEach(ColorTools.colorPalettes, function(v, k)
+    table.foreach(ColorTools.colorPalettes, function(k, v)
         table.insert(dropdown_opts["items"], {
             order = v.order,
             key = k,

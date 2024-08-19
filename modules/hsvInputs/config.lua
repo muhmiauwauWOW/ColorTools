@@ -19,7 +19,8 @@ end
 
 function ColorTools:UpdateHSVInputs()
 	table.foreach({ColorPickerFrame.Content.ColorPicker:GetColorHSV()}, function(k, v)
-		if k ~= "x" then v = v * 100 end 
+		if k ~= 1 then v = v * 100 end 
+		if v < 0  then v = 0 end
 		ColorTools.editboxes[ColorTools.hsvTable[k]]:SetNumber(math.floor(v))
 	end)
 end

@@ -1,8 +1,9 @@
-ColorTools = LibStub("AceAddon-3.0"):NewAddon("ColorTools")
+ColorTools =  {}
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("Lodash"):Get()
 
 ColorTools.colorPalettes = {}
+
 
 ColorTools.config = {
 	frameExtend = 90,
@@ -14,14 +15,15 @@ ColorTools.config = {
 -- ColorTools.config.
 
 
-function ColorTools:OnInitialize()
-	if ColorToolsLastUsed == nil then 
+ColorTools.init = CreateFrame("Frame")
+ColorTools.init:RegisterEvent("PLAYER_LOGIN")
+ColorTools.init:SetScript("OnEvent", function()
+    if ColorToolsLastUsed == nil then 
 		ColorToolsLastUsed = {}
 	end
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 	ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() +  90)
-end 
-
+end)
 
 
 ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()  
@@ -52,7 +54,6 @@ ColorPickerFrame:HookScript('OnShow', function(self)
 		w = 388 + ColorTools.config.frameExtend
     end
 
-	self:SetWidth(w);
-	
+	self:SetWidth(w);	
 	ColorToolsPaletteFrame:updateColorPalette(w)
 end)

@@ -1,6 +1,7 @@
-ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
+--ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("Lodash"):Get()
+
 
 
 
@@ -9,7 +10,6 @@ ColorToolsPaletteMixin = {}
 function ColorToolsPaletteMixin:OnLoad()
 	self.scrollBarHideable = false;
 	ScrollFrame_OnLoad(self);
-
 
 	self.swatchSize = ColorTools.config.swatchSize;
 	self.spacer = ColorTools.config.spacer

@@ -4,8 +4,6 @@ if not L then
 	return
 end
 
-
-
 -- color connectors
 L["lastUsedColors"] = "Last Used Colors"
 L["classColors"] = "Class Colors"

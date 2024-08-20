@@ -23,44 +23,13 @@ function ColorTools:OnInitialize()
 	end
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 
-	ColorTools:initRGBInputs()
-	ColorTools:initHSVInputs()
-
-	ColorTools:initDropdown()
+	--ColorTools:initDropdown()
 
 	ColorTools:initColorPalette()
 
 end 
 
 ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() +  90)
-
-
-function ColorTools:UpdateCPFRGB(editbox)
-	local cr, cg, cb = tonumber(ColorTools.editboxes["R"]:GetNumber()), tonumber(ColorTools.editboxes["G"]:GetNumber()), tonumber(ColorTools.editboxes["B"]:GetNumber())
-
-	-- lazy way to prevent most errors with invalid entries (letters)
-	if cr and cg and cb then
-		-- % based
-		if cr <= 1 and cg <= 1 and cb <= 1 then
-			ColorPickerFrame.Content.ColorPicker:SetColorRGB(cr, cg, cb)
-		-- 0 - 255 based
-		else
-			ColorPickerFrame.Content.ColorPicker:SetColorRGB(cr / 255, cg / 255, cb / 255)
-		end
-	else
-		print('|cffFF0000ColorTools|r: Error converting fields to numbers. Please check the values.')
-	end
-end
-
-function ColorTools:UpdateCPFHSV(editbox)
-	local cr, cg, cb = tonumber(ColorTools.editboxes["X"]:GetNumber()), tonumber(ColorTools.editboxes["Y"]:GetNumber()/100), tonumber(ColorTools.editboxes["Z"]:GetNumber()/100)
-
-	if cr and cg and cb then
-		ColorPickerFrame.Content.ColorPicker:SetColorHSV(cr, cg, cb)
-	else
-		print('|cffFF0000ColorTools|r: Error converting fields to numbers. Please check the values.')
-	end
-end
 
 
 

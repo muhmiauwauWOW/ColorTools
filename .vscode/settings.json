@@ -38,6 +38,10 @@
         "WeeklyRewardActivityItemMixin",
         "ColorPickerHexBoxMixin",
         "COLOR_PICKER_HEX",
-        "CreateFramePool"
+        "CreateFramePool",
+        "RG"
+    ],
+    "Lua.diagnostics.disable": [
+        "undefined-field"
     ]
 }

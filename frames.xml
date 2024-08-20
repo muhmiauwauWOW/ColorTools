@@ -1,0 +1,112 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+
+	<Script file="mixins.lua"/>
+
+
+	<DropdownButton name="ColorToolsDropdown" parent="ColorPickerFrame"  mixin="ColorToolsDropdownMixin" inherits="WowStyle1DropdownTemplate">
+		<Size x="170" y="25"/>
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-23" y="-139"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</DropdownButton>
+
+
+
+	<EditBox name="ColorToolsInputFrameTemplate" inherits="InputBoxInstructionsTemplate" mixin="ColorToolsInputEditboxMixin" virtual="true"  autoFocus="false"  letters="3" numeric="true">	
+		<Size x="45" y="22"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString parentKey="Text" inherits="GameFontNormalLarge" text="">
+					<Anchors>
+						<Anchor point="LEFT"/>
+					</Anchors>
+					<Color r="0.6" g="0.6" b="0.6" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEscapePressed method="OnEscapePressed"/>
+			<OnEditFocusGained method="OnEditFocusGained"/>
+			<OnEditFocusLost method="OnEditFocusLost"/>
+			<OnEnterPressed method="OnEnterPressed"/> 
+		</Scripts> 
+	</EditBox>
+
+	<Frame parent="ColorPickerFrame" name="ColorToolsInput" mixin="ColorToolsInputMixin" >
+		<Size x="100" y="100"/>
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-23" y="-61"/>
+		</Anchors>
+		<Frames>
+			<EditBox name="R" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="RGB" type="string"/>
+					<KeyValue key="text" value="R" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="0"  />
+				</Anchors>
+			</EditBox> 
+
+			<EditBox name="G" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="RGB" type="string"/>
+					<KeyValue key="text" value="G" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="-25"  />
+				</Anchors>
+			</EditBox> 
+
+			<EditBox name="B" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="RGB" type="string"/>
+					<KeyValue key="text" value="B" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="-50"  />
+				</Anchors>
+			</EditBox> 
+
+			<EditBox name="X" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="HSV" type="string"/>
+					<KeyValue key="text" value="X" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="0" y="0"  />
+				</Anchors>
+			</EditBox> 
+
+			<EditBox name="Y" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="HSV" type="string"/>
+					<KeyValue key="text" value="Y" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="0" y="-25"  />
+				</Anchors>
+			</EditBox> 
+
+			<EditBox name="Z" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="HSV" type="string"/>
+					<KeyValue key="text" value="Z" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="0" y="-50"  />
+				</Anchors>
+			</EditBox> 
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts> 
+	</Frame> 
+
+</Ui>

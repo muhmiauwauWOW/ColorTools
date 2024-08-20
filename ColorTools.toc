@@ -15,19 +15,13 @@ Libs\Lodash\Lodash.lua
 
 locale/locale.xml
 
+
+
+
 ColorTools.lua
 ColorConnector.lua
 
-modules\rgbInputs\frames.xml
-modules\rgbInputs\config.lua
-
-modules\hsvInputs\frames.xml
-modules\hsvInputs\config.lua
-
-modules\dropdown\frames.xml
-modules\dropdown\config.lua
-
+frames.xml
 
 modules\palette\frames.xml
 modules\palette\config.lua
-

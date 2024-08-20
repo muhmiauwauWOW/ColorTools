@@ -107,7 +107,6 @@ local PowerBarColori = 0
 table.foreach(PowerBarColor, function(key, entry)
 	if _.isNumber(key) then return  end
 	if entry.r and entry.g and entry.b then 
-		print(key, entry)
 		PowerBarColori = PowerBarColori + 1
 		table.insert(PowerBarColorTable, {
 			sort = PowerBarColori,
@@ -117,8 +116,6 @@ table.foreach(PowerBarColor, function(key, entry)
 		})
 	end
 end)
-
-
 
 ColorTools.colorPalettes["powerBarColor"] = {
 	order = 3,

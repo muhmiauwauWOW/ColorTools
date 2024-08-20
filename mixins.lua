@@ -33,6 +33,10 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 	self.pool:ReleaseAll();
 	local colors = ColorTools.colorPalettes[ColorToolsDropdown.selected].colors
 
+	if ColorToolsDropdown.selected ~= "lastUsedColors" then 
+		table.sort(colors, function(a,b) return a.sort < b.sort end)
+	end
+
 	-- set child height
 	local height = math.ceil(#colors / self.cols) * self.swatchSpace;
 	self.Contents:SetHeight(height)
@@ -49,6 +53,7 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 		frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
 		frame.Color:SetColorTexture(table.unpack(v.color))
 		frame.color = v.color
+		frame.description = v.description
 		frame:Show()
 	end)
 end
@@ -68,6 +73,19 @@ function ColorToolsColorButtonMixin:OnClick()
 	end
 end
 
+
+
+
+function ColorToolsColorButtonMixin:OnEnter()
+	if not self.description then return end
+	GameTooltip:SetOwner(ColorPickerFrame, "ANCHOR_CURSOR");
+	GameTooltip:SetText(self.description, 1, 1, 1, 1, 1)
+	GameTooltip:Show() 
+end
+
+function ColorToolsColorButtonMixin:OnLeave()
+	GameTooltip:Hide() 
+end
 
 
 

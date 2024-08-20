@@ -1,4 +1,5 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
+local _ = LibStub("Lodash"):Get()
 
 function covertColors(colors)
 	local newColors = {};
@@ -54,12 +55,13 @@ ColorTools.colorPalettes["lastUsedColors"] = {
 
 local classColors = {}
 do
-	local classes = {"HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "ROGUE", "DRUID", "SHAMAN", "WARRIOR", "DEATHKNIGHT", "MONK", "DEMONHUNTER", "EVOKER"};
+	for index = 1, GetNumClasses() do
+		local classDisplayName, classTag, classID = GetClassInfo(index)
+		local classColor = C_ClassColor.GetClassColor(classTag);
 
-	for i, className in ipairs(classes) do
-		local classColor = C_ClassColor.GetClassColor(className);
 		table.insert(classColors, {
-			sort = i,
+			sort = classID,
+			description = classDisplayName,
 			color = {
 				classColor.r,
 				classColor.g,
@@ -70,7 +72,6 @@ do
 	end
 end
 
-
 ColorTools.colorPalettes["classColors"] = {
 	order = 1,
 	name = L["classColors"],
@@ -78,22 +79,63 @@ ColorTools.colorPalettes["classColors"] = {
 }
 
 
-ColorTools.colorPalettes["powerBarColor"] = {
+
+
+
+local ItemQualityColors = {}
+table.foreach(Enum.ItemQuality, function(key, id)
+	local entry = ITEM_QUALITY_COLORS[id]
+	table.insert(ItemQualityColors, {
+		sort = id,
+		description = key,
+		colorObj = entry.color,
+		color = {entry.r, entry.g, entry.b, 1}
+	})
+end)
+
+ColorTools.colorPalettes["ItemQuality"] = {
 	order = 2,
+	name = L["ItemQuality"],
+	colors = ItemQualityColors
+}
+
+
+
+local PowerBarColorTable = {}
+local PowerBarColori = 0
+
+table.foreach(PowerBarColor, function(key, entry)
+	if _.isNumber(key) then return  end
+	if entry.r and entry.g and entry.b then 
+		print(key, entry)
+		PowerBarColori = PowerBarColori + 1
+		table.insert(PowerBarColorTable, {
+			sort = PowerBarColori,
+			description = key,
+			colorObj = CreateColor(entry.r, entry.g, entry.b, 1),
+			color = {entry.r, entry.g, entry.b, 1}
+		})
+	end
+end)
+
+
+
+ColorTools.colorPalettes["powerBarColor"] = {
+	order = 3,
 	name = L["powerBarColor"],
-	colors = covertColors2(covertColors(PowerBarColor))
+	colors = PowerBarColorTable
 }
 
 
 ColorTools.colorPalettes["objectiveTrackerColor"] = {
-	order = 2,
+	order = 3,
 	name = L["objectiveTrackerColor"],
 	colors = covertColors2(covertColors(OBJECTIVE_TRACKER_COLOR))
 }
 
 
 ColorTools.colorPalettes["debuffTypeColor"] = {
-	order = 2,
+	order = 3,
 	name = L["debuffTypeColor"],
 	colors = covertColors2(covertColors(DebuffTypeColor))
 }

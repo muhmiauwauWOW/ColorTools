@@ -54,6 +54,6 @@ ColorPickerFrame:HookScript('OnShow', function(self)
 		w = 388 + ColorTools.config.frameExtend
     end
 
-	self:SetWidth(w);	
+	self:SetWidth(w);
 	ColorToolsPaletteFrame:updateColorPalette(w)
-end)
+end)   

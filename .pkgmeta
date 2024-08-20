@@ -2,6 +2,7 @@ package-as: ColorTools
 
 ignore:
   - README.md
+  - test.lua
 
 
 externals:

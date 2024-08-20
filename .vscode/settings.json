@@ -39,7 +39,8 @@
         "ColorPickerHexBoxMixin",
         "COLOR_PICKER_HEX",
         "CreateFramePool",
-        "RG"
+        "RG",
+        "ScrollFrame_OnLoad"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"

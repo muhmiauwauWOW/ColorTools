@@ -2,19 +2,16 @@ ColorTools = LibStub("AceAddon-3.0"):NewAddon("ColorTools")
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("Lodash"):Get()
 
-
-ColorTools.rbgTable =  {"R", "G", "B"}
-ColorTools.hsvTable =  {"X", "Y", "Z"}
-
 ColorTools.colorPalettes = {}
 
-ColorTools.activeColorPalette =  "lastUsedColors"
+ColorTools.config = {
+	frameExtend = 90,
+	swatchSize = 32,
+	spacer = 5,
+	maxLastUsedColors = 30
+}
 
-
-ColorTools.editboxes = {};
-
-ColorTools.colorSwatchX = 300;
-ColorTools.colorSwatchY = -32;
+-- ColorTools.config.
 
 
 function ColorTools:OnInitialize()
@@ -22,59 +19,40 @@ function ColorTools:OnInitialize()
 		ColorToolsLastUsed = {}
 	end
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
-
-	--ColorTools:initDropdown()
-
-	ColorTools:initColorPalette()
-
+	ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() +  90)
 end 
-
-ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() +  90)
-
 
 
 
 ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()  
-	local function sortColor(colors)
-		return _.reverse(_.sortBy(ColorToolsLastUsed, function(a) return a.sort end))
-	end
 	local r, g, b = ColorPickerFrame:GetColorRGB();
 	local alpha = ColorPickerFrame:GetColorAlpha()
-
-	if not _.isEmpty(ColorToolsLastUsed) then 
-		ColorToolsLastUsed = sortColor(ColorToolsLastUsed)
-		if ColorToolsLastUsed[1].color[1] == r and  ColorToolsLastUsed[1].color[2] == g and ColorToolsLastUsed[1].color[3] == b  and ColorToolsLastUsed[1].color[4] == alpha then 
+	local color = {r, g ,b, alpha}
+	
+	if not _.isEmpty(ColorToolsLastUsed) then
+		if CreateColor(table.unpack(ColorToolsLastUsed[1].color)):IsEqualTo(CreateColor(table.unpack(color))) then 
 			return
 		end
 	end
 
-	tinsert(ColorToolsLastUsed, {
-		sort = time(),
-		color = {r, g ,b, alpha}
-	})
-
-	ColorToolsLastUsed = sortColor(ColorToolsLastUsed)
-	ColorToolsLastUsed = _.slice(ColorToolsLastUsed, 1, 30)
-
+	table.insert(ColorToolsLastUsed, 1, { sort = time(), color = color })
+	ColorToolsLastUsed = _.slice(ColorToolsLastUsed, 1, ColorTools.config.maxLastUsedColors)
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
-
 end)
 
 
 
-local frameExtend = 90
+
 
 ColorPickerFrame:HookScript('OnShow', function(self)
-	self.Content:SetPoint("BOTTOMRIGHT", ColorPickerFrame, "BOTTOMRIGHT", frameExtend * -1, 0 )
+	self.Content:SetPoint("BOTTOMRIGHT", ColorPickerFrame, "BOTTOMRIGHT", ColorTools.config.frameExtend * -1, 0 )
 
-	local w = 331 + frameExtend
+	local w = 331 + ColorTools.config.frameExtend
 	if self.hasOpacity then
-		w = 388 + frameExtend
+		w = 388 + ColorTools.config.frameExtend
     end
-
-	ColorTools.hasOpacity = self.hasOpacity
 
 	self:SetWidth(w);
 	
-	ColorTools:updateColorPalette(w, self.hasOpacity)
+	ColorToolsPaletteFrame:updateColorPalette(w)
 end)

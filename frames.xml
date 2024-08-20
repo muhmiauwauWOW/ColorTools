@@ -4,6 +4,50 @@
 	<Script file="mixins.lua"/>
 
 
+
+	<Button name="ColorToolsColorButton" virtual="true" mixin="ColorToolsColorButtonMixin"  >
+		<Size x="32" y="32"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" x="0" y="0"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="AlphaBackground" atlas="colorpicker-checkerboard" useAtlasSize="true">
+					<TexCoords left="0" right="1" top="0" bottom="0.25"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Color">
+					<Color r="1" g="1" b="1" a="1" />
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick method="OnClick"/>
+		</Scripts>
+	</Button>
+
+
+	<ScrollFrame name="ColorToolsPaletteFrame" parent="ColorPickerFrame" mixin="ColorToolsPaletteMixin" inherits="UIPanelScrollFrameCodeTemplate">
+		<Anchors>
+			<Anchor point="BOTTOMLEFT" x="23" y="44"/>
+			<Anchor point="BOTTOMRIGHT" x="-33" y="44"/>
+		</Anchors>
+		<ScrollChild>
+			<Frame parentKey="Contents">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="0"/>
+					<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+				</Anchors>
+			</Frame>
+		</ScrollChild>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</ScrollFrame>
+
+
+
 	<DropdownButton name="ColorToolsDropdown" parent="ColorPickerFrame"  mixin="ColorToolsDropdownMixin" inherits="WowStyle1DropdownTemplate">
 		<Size x="170" y="25"/>
 		<Anchors>

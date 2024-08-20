@@ -16,12 +16,7 @@ Libs\Lodash\Lodash.lua
 locale/locale.xml
 
 
-
-
 ColorTools.lua
 ColorConnector.lua
 
 frames.xml
-
-modules\palette\frames.xml
-modules\palette\config.lua

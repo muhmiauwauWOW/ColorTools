@@ -1,4 +1,94 @@
+ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
+local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("Lodash"):Get()
+
+
+
+ColorToolsPaletteMixin = {}
+
+function ColorToolsPaletteMixin:OnLoad()
+	self.scrollBarHideable = false;
+	ScrollFrame_OnLoad(self);
+
+
+	self.swatchSize = ColorTools.config.swatchSize;
+	self.spacer = ColorTools.config.spacer
+
+	self.swatchSpace = self.swatchSize + self.spacer
+	self.scrollheight = self.swatchSpace * 2
+
+	self.pool = CreateFramePool("Button", self.Contents, "ColorToolsColorButton")
+end
+
+
+function ColorToolsPaletteMixin:updateColorPalette(width)
+	if width then
+		self:SetWidth(width)
+		self.Contents:SetWidth(width)
+		self:SetHeight(self.scrollheight)
+		self.cols = math.floor(width/self.swatchSpace) - 1
+	end
+
+
+	self.pool:ReleaseAll();
+	local colors = ColorTools.colorPalettes[ColorToolsDropdown.selected].colors
+
+	-- set child height
+	local height = math.ceil(#colors / self.cols) * self.swatchSpace;
+	self.Contents:SetHeight(height)
+
+	function getPos(type, index)
+		index = index -1
+		local row = math.floor(index / self.cols) 
+		if type == "y" then return row * self.swatchSpace end
+		return (index - (row * self.cols)) *  self.swatchSpace
+	end
+
+	table.foreach(colors, function(k, v)
+		local frame = self.pool:Acquire()
+		frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
+		frame.Color:SetColorTexture(table.unpack(v.color))
+		frame.color = v.color
+		frame:Show()
+	end)
+end
+
+
+
+
+
+
+ColorToolsColorButtonMixin = {}
+
+
+function ColorToolsColorButtonMixin:OnClick()
+	ColorPickerFrame.Content.ColorPicker:SetColorRGB(table.unpack(self.color));
+	if ColorPickerFrame.hasOpacity then
+		ColorPickerFrame.Content.ColorPicker:SetColorAlpha(self.color[4])
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ColorToolsDropdownMixin = {}
@@ -6,9 +96,10 @@ ColorToolsDropdownMixin = {}
 
 function ColorToolsDropdownMixin:OnLoad()
 	self:SetWidth(170);
+
+	ColorToolsDropdown.selected = "lastUsedColors"
 	
-	self:SetSelectionTranslator(function(selection)
-		ColorTools.activeColorPalette = selection.data
+	self:SetSelectionTranslator(function(selection)		
 		return ColorTools.colorPalettes[selection.data].name;
 	end);
 
@@ -22,11 +113,11 @@ function ColorToolsDropdownMixin:OnLoad()
 
     MenuUtil.CreateRadioMenu(self,
         function(value)
-          	return value == ColorTools.activeColorPalette
+          	return value == ColorToolsDropdown.selected
         end, 
         function(value)
-            ColorTools.activeColorPalette = value
-			ColorTools:updateColorPalette()
+			self.selected = value
+			ColorToolsPaletteFrame:updateColorPalette()
         end,
         table.unpack(items)
     )
@@ -68,28 +159,25 @@ end
 function ColorToolsInputMixin:UpdateInputs()
 
 	local colorsTable = {}
-	colorsTable["R"], colorsTable["G"], colorsTable["B"] = ColorPickerFrame.Content.ColorPicker:GetColorRGB()
+	colorsTable["R"], colorsTable["G"], colorsTable["B"] = CreateColor(ColorPickerFrame.Content.ColorPicker:GetColorRGB()):GetRGBAAsBytes()
 	colorsTable["X"], colorsTable["Y"], colorsTable["Z"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
 
-
-	table.foreach({self:GetChildren()}, function(k, v)
-		local type = v.text
+	table.foreach({self:GetChildren()}, function(k, input)
+		local type = input.text
 		local color = colorsTable[type];
-		if type == "R" or type == "G" or type == "B"  then
-			color = color * 255
-		elseif type == "Y" or type == "Z"  then
+		if type == "Y" or type == "Z"  then
 			color = color * 100
 		end
 
 		if color < 0  then color = 0 end
-		v:SetNumber(math.floor(color))
+		input:SetNumber(math.floor(color))
 	end)
 end
 
 
 function ColorToolsInputMixin:SetColor(mode, type, value)
 	local colorsTable = {}
-	if mode == "RGB" then 
+	if mode == "RGB" then
 		colorsTable["R"], colorsTable["G"], colorsTable["B"] = ColorPickerFrame.Content.ColorPicker:GetColorRGB()
 		colorsTable[type] = value / 255
 		ColorPickerFrame.Content.ColorPicker:SetColorRGB(colorsTable["R"], colorsTable["G"], colorsTable["B"])

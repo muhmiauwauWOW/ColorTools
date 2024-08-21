@@ -9,7 +9,7 @@
 
 Libs\LibStub\LibStub.lua
 Libs\AceLocale-3.0\AceLocale-3.0.xml
-Libs\Lodash\Lodash.lua
+Libs\LibLodash\LibLodash.lua
 
 
 locale/locale.xml

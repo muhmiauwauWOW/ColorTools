@@ -1,6 +1,6 @@
 ColorTools =  {}
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
-local _ = LibStub("Lodash"):Get()
+local _ = LibStub("LibLodash"):Get()
 
 ColorTools.colorPalettes = {}
 

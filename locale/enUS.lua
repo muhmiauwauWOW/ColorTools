@@ -10,5 +10,5 @@ L["classColors"] = "Class Colors"
 L["powerBarColor"] = "PowerBar Colors"
 L["objectiveTrackerColor"] = "Objective Tracker Color"
 L["debuffTypeColor"] = "Debuff TypeColor"
-L["ItemQuality"] = "ItemQuality"
+L["ItemQuality"] = "Item Quality"
 

@@ -11,3 +11,6 @@ externals:
   Libs/LibLodash: https://github.com/muhmiauwauWOW/LibLodash.git
 
 enable-nolib-creation: no
+
+tools-used:
+    - liblodash

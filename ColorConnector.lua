@@ -1,5 +1,5 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
-local _ = LibStub("LibLodash"):Get()
+local _ = LibStub("LibLodash-1"):Get()
 
 function covertColors(colors)
 	local newColors = {};

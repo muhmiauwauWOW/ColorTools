@@ -1,4 +1,4 @@
-ColorTools =  {}
+local addonName, ColorTools =  ...
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("LibLodash-1"):Get()
 
@@ -9,7 +9,8 @@ ColorTools.config = {
 	frameExtend = 90,
 	swatchSize = 32,
 	spacer = 5,
-	maxLastUsedColors = 30
+	maxLastUsedColors = 30,
+	selected = "lastUsedColors"
 }
 
 -- ColorTools.config.
@@ -18,11 +19,11 @@ ColorTools.config = {
 ColorTools.init = CreateFrame("Frame")
 ColorTools.init:RegisterEvent("PLAYER_LOGIN")
 ColorTools.init:SetScript("OnEvent", function()
-    if ColorToolsLastUsed == nil then 
-		ColorToolsLastUsed = {}
-	end
+	ColorToolsLastUsed = ColorToolsLastUsed or {}
+	ColorToolsFavorites = ColorToolsFavorites or {}
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
-	ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() +  90)
+	ColorTools.colorPalettes["favoriteColors"].colors = ColorToolsFavorites
+	ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() + 90)
 end)
 
 
@@ -57,3 +58,29 @@ ColorPickerFrame:HookScript('OnShow', function(self)
 	self:SetWidth(w);
 	ColorToolsPaletteFrame:updateColorPalette(w)
 end)   
+
+
+
+
+
+ColorTools.favorits = {}
+
+function ColorTools.favorits:is(color, i)
+	local fn = i and _.findIndex or _.find
+	return fn(ColorToolsFavorites, function(entry)
+		return CreateColor(table.unpack(entry.color)):IsEqualTo(CreateColor(table.unpack(color)))
+	end)
+end
+
+function ColorTools.favorits:add(color)
+	if self:is(color.color)then return end
+	table.insert(ColorToolsFavorites, 1, color)
+end
+
+function ColorTools.favorits:remove(color)
+	local index = self:is(color, true)
+	table.remove(ColorToolsFavorites, index)
+	if ColorToolsDropdown.selected == "favoriteColors" then
+		ColorToolsPaletteFrame:updateColorPalette()
+	 end
+end

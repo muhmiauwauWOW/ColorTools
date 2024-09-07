@@ -1,3 +1,4 @@
+local addonName, ColorTools =  ...
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("LibLodash-1"):Get()
 
@@ -49,6 +50,12 @@ end
 ColorTools.colorPalettes["lastUsedColors"] = {
 	order = 0,
 	name = L["lastUsedColors"],
+	colors = {}
+}
+
+ColorTools.colorPalettes["favoriteColors"] = {
+	order = 0,
+	name = L["favoriteColors"],
 	colors = {}
 }
 

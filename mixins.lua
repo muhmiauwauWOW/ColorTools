@@ -1,4 +1,4 @@
---ColorTools = LibStub("AceAddon-3.0"):GetAddon("ColorTools")
+local addonName, ColorTools =  ...
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("LibLodash-1"):Get()
 
@@ -48,13 +48,23 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 		return (index - (row * self.cols)) *  self.swatchSpace
 	end
 
+	function addMenu(parentFrame, color)
+		
+	end
+
+
+
 	table.foreach(colors, function(k, v)
+		if not v then return end
+		if not v.color then return end
 		local frame = self.pool:Acquire()
 		frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
 		frame.Color:SetColorTexture(table.unpack(v.color))
-		frame.color = v.color
+		frame.color = v.color 
 		frame.description = v.description
 		frame:Show()
+		frame:RegisterForClicks("RightButtonDown", "LeftButtonDown")
+	--	addMenu(frame, frame.color)
 	end)
 end
 
@@ -66,10 +76,26 @@ end
 ColorToolsColorButtonMixin = {}
 
 
-function ColorToolsColorButtonMixin:OnClick()
-	ColorPickerFrame.Content.ColorPicker:SetColorRGB(table.unpack(self.color));
-	if ColorPickerFrame.hasOpacity then
-		ColorPickerFrame.Content.ColorPicker:SetColorAlpha(self.color[4])
+function ColorToolsColorButtonMixin:OnClick(button, b,c)
+	if button == "LeftButton" then 
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(table.unpack(self.color));
+		if ColorPickerFrame.hasOpacity then
+			ColorPickerFrame.Content.ColorPicker:SetColorAlpha(self.color[4])
+		end
+	elseif button == "RightButton" then 
+		MenuUtil.CreateContextMenu(self, function(ownerRegion, rootDescription)
+			rootDescription:SetTag("MENU_COLORTOOLS_COLOR_SWATCH")
+			if ColorTools.favorits:is(self.color) then 
+				rootDescription:CreateButton(L["favoriteRemove"], function() ColorTools.favorits:remove(self.color) end)
+			else
+				local color = {
+					sort = time(),
+					description = self.description,
+					color = self.color
+				}
+				rootDescription:CreateButton(L["favoriteAdd"], function() ColorTools.favorits:add(color) end)
+			end
+		end)
 	end
 end
 
@@ -115,7 +141,7 @@ ColorToolsDropdownMixin = {}
 function ColorToolsDropdownMixin:OnLoad()
 	self:SetWidth(170);
 
-	ColorToolsDropdown.selected = "lastUsedColors"
+	ColorToolsDropdown.selected = ColorTools.config.selected
 	
 	self:SetSelectionTranslator(function(selection)		
 		return ColorTools.colorPalettes[selection.data].name;

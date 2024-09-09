@@ -259,3 +259,40 @@ function ColorToolsInputEditboxMixin:OnEnterPressed()
 	self:ClearFocus() 
 	self:GetParent():SetColor(self.mode, self.text, self:GetNumber())
 end
+
+
+
+ColorToolsColorSwatchMixin = {}
+
+function ColorToolsColorSwatchMixin:OnLoad()
+	self:RegisterForClicks("RightButtonDown", "LeftButtonDown")
+end
+function ColorToolsColorSwatchMixin:OnClick(button)
+	local r,g,b,a;
+	if self.current then 
+		r,g,b = ColorPickerFrame:GetColorRGB()
+		a = ColorPickerFrame:GetColorAlpha()
+	else 
+		r,g,b,a = ColorPickerFrame:GetPreviousValues()
+	end
+
+	self.color = {
+		sort = time(),
+		color = {r,g,b,a}
+	}
+
+	if button == "LeftButton" then 
+		if self.current then return end
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r,g,b);
+	elseif button == "RightButton" then 
+
+		MenuUtil.CreateContextMenu(self, function(ownerRegion, rootDescription)
+			rootDescription:SetTag("MENU_COLORTOOLS_COLOR_SWATCH")
+			if ColorTools.favorits:is(self.color.color) then
+				rootDescription:CreateButton(L["favoriteRemove"], function() ColorTools.favorits:remove(self.color.color) end)
+			else
+				rootDescription:CreateButton(L["favoriteAdd"], function() ColorTools.favorits:add(self.color) end)
+			end
+		end)
+	end
+end

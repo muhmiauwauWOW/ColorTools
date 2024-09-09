@@ -60,6 +60,18 @@ ColorPickerFrame:HookScript('OnShow', function(self)
 end)   
 
 
+function ColorTools.updateColorPalette(pallete)
+	if ColorToolsDropdown.selected == "favoriteColors" then
+		ColorToolsPaletteFrame:updateColorPalette()
+	end
+end
+
+
+
+
+
+
+
 
 
 
@@ -75,12 +87,11 @@ end
 function ColorTools.favorits:add(color)
 	if self:is(color.color)then return end
 	table.insert(ColorToolsFavorites, 1, color)
+	ColorTools.updateColorPalette("favoriteColors")
 end
 
 function ColorTools.favorits:remove(color)
 	local index = self:is(color, true)
 	table.remove(ColorToolsFavorites, index)
-	if ColorToolsDropdown.selected == "favoriteColors" then
-		ColorToolsPaletteFrame:updateColorPalette()
-	 end
+	ColorTools.updateColorPalette("favoriteColors")
 end

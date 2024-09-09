@@ -4,6 +4,10 @@
 	<Script file="mixins.lua"/>
 
 
+	
+
+
+
 
 	<Button name="ColorToolsColorButton" virtual="true" mixin="ColorToolsColorButtonMixin"  >
 		<Size x="32" y="32"/>
@@ -83,7 +87,47 @@
 		</Scripts> 
 	</EditBox>
 
-	<Frame parent="ColorPickerFrame" name="ColorToolsInput" mixin="ColorToolsInputMixin" >
+
+
+	<Frame name="ColorToolsColorSwatch" parent="ColorPickerFrame">
+		<Size x="47" y="50"/>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeKey="$parent.Content" relativePoint="TOPRIGHT" x="-100" y="-37"/>
+		</Anchors>
+		<Frames>
+			<Button parentKey="SwatchCurrent" mixin="ColorToolsColorSwatchMixin"  >
+				<KeyValues>
+					<KeyValue key="current" value="true" type="boolean" />
+				</KeyValues>
+				<Size x="47" y="25"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+			<Button parentKey="SwatchOriginal" mixin="ColorToolsColorSwatchMixin"  >
+				<KeyValues>
+					<KeyValue key="current" value="false" type="boolean" />
+				</KeyValues>
+				<Size x="47" y="25"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="-25" />
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnClick method="OnClick"/>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame> 
+
+
+
+
+	<Frame name="ColorToolsInput" parent="ColorPickerFrame"  mixin="ColorToolsInputMixin" >
 		<Size x="100" y="100"/>
 		<Anchors>
 			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-23" y="-61"/>

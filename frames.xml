@@ -45,6 +45,21 @@
 					<Anchor point="TOPLEFT" x="0" y="0"/>
 					<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
 				</Anchors>
+				<Frames>
+					<Frame parentKey="NoContentText" hidden="false">
+						<Anchors>
+							<Anchor point="TOPLEFT" x="0" y="0"/>
+							<Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString inherits="SystemFont_Med3" text="QUEST_LOG_NO_RESULTS" >
+									<Size x="250"/>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
 			</Frame>
 		</ScrollChild>
 		<Scripts>

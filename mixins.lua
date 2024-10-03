@@ -17,6 +17,7 @@ function ColorToolsPaletteMixin:OnLoad()
 	self.swatchSpace = self.swatchSize + self.spacer
 	self.scrollheight = self.swatchSpace * 2
 
+	self.Contents.NoContentText:SetPoint("TOP", self.swatchSpace - 7)
 	self.pool = CreateFramePool("Button", self.Contents, "ColorToolsColorButton")
 end
 
@@ -39,19 +40,18 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 
 	-- set child height
 	local height = math.ceil(#colors / self.cols) * self.swatchSpace;
+	height = math.max(self.scrollheight, height)
 	self.Contents:SetHeight(height)
 
-	function getPos(type, index)
+	local function getPos(type, index)
 		index = index -1
 		local row = math.floor(index / self.cols) 
 		if type == "y" then return row * self.swatchSpace end
 		return (index - (row * self.cols)) *  self.swatchSpace
 	end
 
-	function addMenu(parentFrame, color)
-		
-	end
 
+	self.Contents.NoContentText:SetShown(#colors == 0)
 
 
 	table.foreach(colors, function(k, v)
@@ -64,7 +64,6 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 		frame.description = v.description
 		frame:Show()
 		frame:RegisterForClicks("RightButtonDown", "LeftButtonDown")
-	--	addMenu(frame, frame.color)
 	end)
 end
 

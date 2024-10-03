@@ -87,11 +87,11 @@ end
 function ColorTools.favorits:add(color)
 	if self:is(color.color)then return end
 	table.insert(ColorToolsFavorites, 1, color)
-	ColorTools.updateColorPalette("favoriteColors")
+	ColorTools:updateColorPalette("favoriteColors")
 end
 
 function ColorTools.favorits:remove(color)
 	local index = self:is(color, true)
 	table.remove(ColorToolsFavorites, index)
-	ColorTools.updateColorPalette("favoriteColors")
+	ColorTools:updateColorPalette("favoriteColors")
 end

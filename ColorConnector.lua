@@ -2,7 +2,8 @@ local addonName, ColorTools =  ...
 local L = LibStub("AceLocale-3.0"):GetLocale("ColorTools")
 local _ = LibStub("LibLodash-1"):Get()
 
-function covertColors(colors)
+
+local function covertColors(colors)
 	local newColors = {};
 
 	for k, v in pairs(colors) do
@@ -22,27 +23,18 @@ function covertColors(colors)
 	end
 
 	return newColors;
-
 end
 
 
-function covertColors2(colors)
+local function covertColors2(colors)
 	local newColors = {};
-	
 	table.foreach(colors,function(k,v) 
-
 		table.insert(newColors, {
 			sort = k,
 			color = v
 		})
-
-
-
 	end)
-
-
 	return newColors;
-
 end
 
 
@@ -60,33 +52,42 @@ ColorTools.colorPalettes["favoriteColors"] = {
 }
 
 
-local classColors = {}
-do
-	for index = 1, GetNumClasses() do
-		local classDisplayName, classTag, classID = GetClassInfo(index)
-		local classColor = C_ClassColor.GetClassColor(classTag);
 
-		table.insert(classColors, {
-			sort = classID,
-			description = classDisplayName,
-			color = {
-				classColor.r,
-				classColor.g,
-				classColor.b,
-				1
-			}
-		})
-	end
+
+
+
+local classNames = LocalizedClassList()
+local sortedClasses = {}
+for key, value in pairs(classNames) do
+	tinsert(sortedClasses, {
+		key = key,
+		value = value,
+	})
 end
 
+sort(sortedClasses, function(a, b) return a.value < b.value end)
+
+
+local function processClassColors(colorsTable)
+	local cTable = {}
+	_.forEach(sortedClasses, function(classObj, idx)
+		if not colorsTable[classObj.key] then return end
+		table.insert(cTable, {
+			sort = idx,
+			description = classObj.value,
+			color = {colorsTable[classObj.key]:GetRGBA()}
+		})
+	end)
+
+	return cTable
+end
+
+local classTable = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 ColorTools.colorPalettes["classColors"] = {
 	order = 1,
 	name = L["classColors"],
-	colors = classColors
+	colors = processClassColors(classTable)
 }
-
-
-
 
 
 local ItemQualityColors = {}
@@ -143,6 +144,5 @@ ColorTools.colorPalettes["debuffTypeColor"] = {
 	name = L["debuffTypeColor"],
 	colors = covertColors2(covertColors(DebuffTypeColor))
 }
-
 
 

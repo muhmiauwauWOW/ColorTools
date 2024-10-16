@@ -144,5 +144,3 @@ ColorTools.colorPalettes["debuffTypeColor"] = {
 	name = L["debuffTypeColor"],
 	colors = covertColors2(covertColors(DebuffTypeColor))
 }
-
-

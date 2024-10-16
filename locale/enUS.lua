@@ -6,7 +6,6 @@ end
 
 -- color connectors
 L["lastUsedColors"] = "Last Used Colors"
-L["favoriteColors"] = "Favorites"
 L["classColors"] = "Class Colors"
 L["powerBarColor"] = "PowerBar Colors"
 L["objectiveTrackerColor"] = "Objective Tracker Color"
@@ -15,3 +14,4 @@ L["ItemQuality"] = "Item Quality"
 L["favoriteColors"] = "Favorites"
 L["favoriteRemove"] = "Remove from Favorits"
 L["favoriteAdd"] = "Add to Favorits"
+L["infavoriteColors"] = "In favorites colors"

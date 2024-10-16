@@ -61,7 +61,7 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 		frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
 		frame.Color:SetColorTexture(table.unpack(v.color))
 		frame.color = v.color 
-		frame.description = v.description
+		frame.description = self:getDescription(v)
 		frame:Show()
 		frame:RegisterForClicks("RightButtonDown", "LeftButtonDown")
 	end)
@@ -69,6 +69,23 @@ end
 
 
 
+function ColorToolsPaletteMixin:getDescription(v)
+	if v.description then return v.description end
+
+	if ColorToolsDropdown.selected == "lastUsedColors" or ColorToolsDropdown.selected == "favoriteColors" then
+		local currentColor = CreateColor(table.unpack(v.color))
+		local matches = _.filter(ColorTools.allColors, function(color, k) return color.color:IsEqualTo(currentColor) end)
+		if #matches == 0 then return "" end
+
+		local out = {}
+		_.forEach(matches, function(match)
+			if match.name == L["infavoriteColors"] and ColorToolsDropdown.selected == "favoriteColors" then return end
+			table.insert(out, match.name)
+		end)
+		return table.concat(out, "\n")
+	end
+	return v.description or ""
+end
 
 
 
@@ -103,9 +120,9 @@ end
 
 function ColorToolsColorButtonMixin:OnEnter()
 	if not self.description then return end
-	GameTooltip:SetOwner(ColorPickerFrame, "ANCHOR_CURSOR");
+	GameTooltip:SetOwner(ColorPickerFrame, "ANCHOR_CURSOR_RIGHT", 35, 0);
 	GameTooltip:SetText(self.description, 1, 1, 1, 1, 1)
-	GameTooltip:Show() 
+	GameTooltip:Show()
 end
 
 function ColorToolsColorButtonMixin:OnLeave()
@@ -140,7 +157,7 @@ ColorToolsDropdownMixin = {}
 function ColorToolsDropdownMixin:OnLoad()
 	self:SetWidth(170);
 
-	ColorToolsDropdown.selected = ColorTools.config.selected
+	-- ColorToolsDropdown.selected = ColorToolsSelected
 	
 	self:SetSelectionTranslator(function(selection)		
 		return ColorTools.colorPalettes[selection.data].name;
@@ -160,6 +177,7 @@ function ColorToolsDropdownMixin:OnLoad()
         end, 
         function(value)
 			self.selected = value
+			ColorToolsSelected = value
 			ColorToolsPaletteFrame:updateColorPalette()
         end,
         table.unpack(items)

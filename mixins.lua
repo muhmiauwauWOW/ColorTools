@@ -111,6 +111,7 @@ function ColorToolsColorButtonMixin:OnClick(button, b,c)
 				}
 				rootDescription:CreateButton(L["favoriteAdd"], function() ColorTools.favorits:add(color) end)
 			end
+			self:SetFrameStrata("TOOLTIP")
 		end)
 	end
 end
@@ -187,6 +188,7 @@ function ColorToolsDropdownMixin:OnLoad()
 	-- ugly fix for AceGUI 
 	local function OnShow()
         self.menu:SetFrameStrata("TOOLTIP")
+		-- self.menu:SetFrameStrata("TOOLTIP")
 	end
 
  	self:RegisterCallback(DropdownButtonMixin.Event.OnMenuOpen, OnShow);
@@ -310,6 +312,7 @@ function ColorToolsColorSwatchMixin:OnClick(button)
 			else
 				rootDescription:CreateButton(L["favoriteAdd"], function() ColorTools.favorits:add(self.color) end)
 			end
+			self:SetFrameStrata("TOOLTIP")
 		end)
 	end
 end

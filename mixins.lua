@@ -223,13 +223,13 @@ function ColorToolsInputMixin:UpdateInputs()
 
 	local colorsTable = {}
 	colorsTable["R"], colorsTable["G"], colorsTable["B"], colorsTable["A"] = CreateColor(ColorPickerFrame.Content.ColorPicker:GetColorRGB()):GetRGBAAsBytes()
-	colorsTable["X"], colorsTable["Y"], colorsTable["Z"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
+	colorsTable["H"], colorsTable["S"], colorsTable["V"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
 	colorsTable["A"] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
 
 	table.foreach({self:GetChildren()}, function(k, input)
 		local type = input.text
 		local color = colorsTable[type];
-		if type == "Y" or type == "Z" or type == "A" then
+		if type == "S" or type == "V" or type == "A" then
 			color = color * 100
 		end
 
@@ -246,8 +246,8 @@ function ColorToolsInputMixin:SetColor(mode, type, value)
 		colorsTable[type] = value / 255
 		ColorPickerFrame.Content.ColorPicker:SetColorRGB(colorsTable["R"], colorsTable["G"], colorsTable["B"])
 	elseif mode == "HSV" then 
-		colorsTable["X"], colorsTable["Y"], colorsTable["Z"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
-		colorsTable[type] = (type ~= "X") and value / 100 or value
+		colorsTable["H"], colorsTable["S"], colorsTable["V"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
+		colorsTable[type] = (type ~= "H") and value / 100 or value
 		ColorPickerFrame.Content.ColorPicker:SetColorHSV(colorsTable["X"], colorsTable["Y"], colorsTable["Z"])
 	elseif mode == "ALPHA" then 
 		colorsTable[type] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
@@ -283,6 +283,26 @@ function ColorToolsInputEditboxMixin:OnEnterPressed()
 	self:ClearFocus() 
 	self:GetParent():SetColor(self.mode, self.text, self:GetNumber())
 end
+
+function ColorToolsInputEditboxMixin:OnEnter()
+	local title = L[string.format("EditBox_tooltip_%s", self.text)] or nil
+	local desription = L[string.format("EditBox_tooltip_%s_description", self.text)] or nil
+	if not title or not desription then return end
+
+	GameTooltip:SetOwner(ColorPickerFrame, "ANCHOR_CURSOR_RIGHT", 35, 0);
+	GameTooltip_SetTitle(GameTooltip, title)
+	GameTooltip_AddNormalLine(GameTooltip, desription);
+	GameTooltip:Show()
+end
+
+function ColorToolsInputEditboxMixin:OnLeave()
+	GameTooltip:Hide() 
+end
+
+
+
+
+
 
 
 

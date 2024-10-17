@@ -99,6 +99,8 @@
 			<OnEditFocusGained method="OnEditFocusGained"/>
 			<OnEditFocusLost method="OnEditFocusLost"/>
 			<OnEnterPressed method="OnEnterPressed"/> 
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
 		</Scripts> 
 	</EditBox>
 
@@ -191,7 +193,7 @@
 			<EditBox name="X" inherits="ColorToolsInputFrameTemplate">
 				<KeyValues>
 					<KeyValue key="mode" value="HSV" type="string"/>
-					<KeyValue key="text" value="X" type="string"/>
+					<KeyValue key="text" value="H" type="string"/>
 				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="0" y="0"  />
@@ -201,7 +203,7 @@
 			<EditBox name="Y" inherits="ColorToolsInputFrameTemplate">
 				<KeyValues>
 					<KeyValue key="mode" value="HSV" type="string"/>
-					<KeyValue key="text" value="Y" type="string"/>
+					<KeyValue key="text" value="S" type="string"/>
 				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="0" y="-25"  />
@@ -211,7 +213,7 @@
 			<EditBox name="Z" inherits="ColorToolsInputFrameTemplate">
 				<KeyValues>
 					<KeyValue key="mode" value="HSV" type="string"/>
-					<KeyValue key="text" value="Z" type="string"/>
+					<KeyValue key="text" value="V" type="string"/>
 				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="0" y="-50"  />

@@ -6,7 +6,7 @@ ColorTools.colorPalettes = {}
 
 
 ColorTools.config = {
-	frameExtend = 90,
+	frameExtend = 80,
 	swatchSize = 32,
 	spacer = 5,
 	maxLastUsedColors = 30,

@@ -70,9 +70,9 @@
 
 
 	<DropdownButton name="ColorToolsDropdown" parent="ColorPickerFrame"  mixin="ColorToolsDropdownMixin" inherits="WowStyle1DropdownTemplate">
-		<Size x="170" y="25"/>
+		<Size x="160" y="25"/>
 		<Anchors>
-			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-23" y="-139"/>
+			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-20" y="-139"/>
 		</Anchors>
 		<Scripts>
 			<OnLoad method="OnLoad"/>
@@ -145,7 +145,7 @@
 	<Frame name="ColorToolsInput" parent="ColorPickerFrame"  mixin="ColorToolsInputMixin" >
 		<Size x="100" y="100"/>
 		<Anchors>
-			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-23" y="-61"/>
+			<Anchor point="TOPRIGHT" relativeTo="ColorPickerFrame" relativePoint="TOPRIGHT"  x="-20" y="-61"/>
 		</Anchors>
 		<Frames>
 			<EditBox name="R" inherits="ColorToolsInputFrameTemplate">
@@ -175,6 +175,16 @@
 				</KeyValues>
 				<Anchors>
 					<Anchor point="TOPLEFT" x="0" y="-50"  />
+				</Anchors>
+			</EditBox> 
+
+			<EditBox name="A" inherits="ColorToolsInputFrameTemplate">
+				<KeyValues>
+					<KeyValue key="mode" value="ALPHA" type="string"/>
+					<KeyValue key="text" value="A" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="-55" y="-50"  />
 				</Anchors>
 			</EditBox> 
 

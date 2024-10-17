@@ -19,3 +19,5 @@ ColorTools.lua
 ColorConnector.lua
 
 frames.xml
+
+test.lua

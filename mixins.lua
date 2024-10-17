@@ -156,7 +156,7 @@ ColorToolsDropdownMixin = {}
 
 
 function ColorToolsDropdownMixin:OnLoad()
-	self:SetWidth(170);
+	-- self:SetWidth(160);
 
 	-- ColorToolsDropdown.selected = ColorToolsSelected
 	
@@ -208,7 +208,7 @@ ColorToolsInputMixin = {}
 
 function ColorToolsInputMixin:OnLoad()
 	ColorPickerFrame.Content.HexBox:ClearAllPoints()
-	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -35, -35)
+	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -40, -35)
 
 
 	ColorPickerFrame.Content.ColorPicker:HookScript('OnColorSelect', function() self:UpdateInputs(); end)
@@ -222,17 +222,18 @@ end
 function ColorToolsInputMixin:UpdateInputs()
 
 	local colorsTable = {}
-	colorsTable["R"], colorsTable["G"], colorsTable["B"] = CreateColor(ColorPickerFrame.Content.ColorPicker:GetColorRGB()):GetRGBAAsBytes()
+	colorsTable["R"], colorsTable["G"], colorsTable["B"], colorsTable["A"] = CreateColor(ColorPickerFrame.Content.ColorPicker:GetColorRGB()):GetRGBAAsBytes()
 	colorsTable["X"], colorsTable["Y"], colorsTable["Z"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
+	colorsTable["A"] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
 
 	table.foreach({self:GetChildren()}, function(k, input)
 		local type = input.text
 		local color = colorsTable[type];
-		if type == "Y" or type == "Z"  then
+		if type == "Y" or type == "Z" or type == "A" then
 			color = color * 100
 		end
 
-		if color < 0  then color = 0 end
+		if color < 0 then color = 0 end
 		input:SetNumber(math.floor(color))
 	end)
 end
@@ -248,6 +249,10 @@ function ColorToolsInputMixin:SetColor(mode, type, value)
 		colorsTable["X"], colorsTable["Y"], colorsTable["Z"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
 		colorsTable[type] = (type ~= "X") and value / 100 or value
 		ColorPickerFrame.Content.ColorPicker:SetColorHSV(colorsTable["X"], colorsTable["Y"], colorsTable["Z"])
+	elseif mode == "ALPHA" then 
+		colorsTable[type] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
+		colorsTable[type] = value / 100
+		ColorPickerFrame.Content.ColorPicker:SetColorAlpha(colorsTable[type])
 	end
 end
 

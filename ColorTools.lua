@@ -61,19 +61,26 @@ function ColorTools:gererateAllColorsTable()
 end
 
 
-ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()  
+ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()
 	local r, g, b = ColorPickerFrame:GetColorRGB();
 	local alpha = ColorPickerFrame:GetColorAlpha()
-	local color = {r, g ,b, alpha}
-	
-	if not _.isEmpty(ColorToolsLastUsed) then
-		if CreateColor(table.unpack(ColorToolsLastUsed[1].color)):IsEqualTo(CreateColor(table.unpack(color))) then 
-			return
+	local function short(v) return Round(v * 1e5) / 1e5 end
+	local color = {short(r), short(g), short(b), short(alpha)}
+	local dupe = false
+
+	for i, v in ipairs(ColorToolsLastUsed) do
+		if CreateColor(table.unpack(v.color)):IsEqualTo(CreateColor(table.unpack(color))) then
+			ColorToolsLastUsed[i].sort, dupe = time(), true
+			break
 		end
 	end
 
-	table.insert(ColorToolsLastUsed, 1, { sort = time(), color = color })
-	ColorToolsLastUsed = _.slice(ColorToolsLastUsed, 1, ColorTools.config.maxLastUsedColors)
+	if not dupe then
+		table.insert(ColorToolsLastUsed, 1, { sort = time(), color = color })
+		ColorToolsLastUsed = _.slice(ColorToolsLastUsed, 1, ColorTools.config.maxLastUsedColors)
+	else
+		table.sort(ColorToolsLastUsed, function(a, b) return a.sort > b.sort end)
+	end
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 end)
 

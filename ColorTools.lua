@@ -26,6 +26,8 @@ ColorTools.init:SetScript("OnEvent", function()
 	ColorPickerFrame:SetHeight(ColorPickerFrame:GetHeight() + 90)
 	ColorToolsDropdown.selected = ColorToolsSelected
 	ColorTools:gererateAllColorsTable()
+
+	ColorTools.Options:init()
 end)
 
 ColorTools.allColors = {}
@@ -63,19 +65,40 @@ end
 
 ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()  
 	local r, g, b = ColorPickerFrame:GetColorRGB();
-	local alpha = ColorPickerFrame:GetColorAlpha()
+	local alpha = ColorToolsOptions.lastUsedColors_alpha_as_new and ColorPickerFrame:GetColorAlpha() or 1
 	local color = {r, g ,b, alpha}
 	
-	if not _.isEmpty(ColorToolsLastUsed) then
-		if CreateColor(table.unpack(ColorToolsLastUsed[1].color)):IsEqualTo(CreateColor(table.unpack(color))) then 
-			return
+	if ColorToolsOptions.lastUsedColors_duplicates then
+		if not _.isEmpty(ColorToolsLastUsed) then
+			local c1 = CreateColor(table.unpack(ColorToolsLastUsed[1].color))
+			local c2 = CreateColor(table.unpack(color))
+
+			if ColorToolsOptions.lastUsedColors_alpha_as_new then 
+				if c1:IsEqualTo(c2) then return	end
+			else 
+				if c1:IsRGBEqualTo(c2) then return end
+			end
 		end
 	end
 
+	-- insert new color 
 	table.insert(ColorToolsLastUsed, 1, { sort = time(), color = color })
+
+	if not ColorToolsOptions.lastUsedColors_duplicates then
+		ColorToolsLastUsed = _.uniq(ColorToolsLastUsed, function(n)
+			if ColorToolsOptions.lastUsedColors_alpha_as_new then 
+				return string.format("%d-%d-%d-%d", n.color[1], n.color[2], n.color[3], n.color[4])
+			else
+				return string.format("%d-%d-%d", n.color[1], n.color[2], n.color[3])
+			end
+		end)
+	end
+
 	ColorToolsLastUsed = _.slice(ColorToolsLastUsed, 1, ColorTools.config.maxLastUsedColors)
 	ColorTools.colorPalettes["lastUsedColors"].colors = ColorToolsLastUsed
 end)
+
+
 
 
 
@@ -129,3 +152,69 @@ function ColorTools.favorits:remove(color)
 	table.remove(ColorToolsFavorites, index)
 	ColorTools:updateColorPalette("favoriteColors")
 end
+
+
+
+
+
+
+
+
+
+
+
+ColorTools.Options = {} 
+
+function ColorTools.Options:init()
+	ColorToolsOptions = ColorToolsOptions or {}
+
+	local AddOnInfo = {C_AddOns.GetAddOnInfo(addonName)}
+    local category, layout = Settings.RegisterVerticalLayoutCategory(AddOnInfo[2])
+    self.category = category
+    self.layout = layout
+    Settings.RegisterAddOnCategory(category)
+    ColorTools.OptionsID = category:GetID()
+
+
+
+    self.layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L["lastUsedColors"]));
+
+	local setting = Settings.RegisterAddOnSetting(self.category, "lastUsedColors_duplicates", "lastUsedColors_duplicates", ColorToolsOptions, "boolean", L["Options_lastUsedColors_duplicates_name"], true)
+    Settings.CreateCheckbox(self.category, setting, L["Options_lastUsedColors_duplicates_desc"])
+
+
+	local setting = Settings.RegisterAddOnSetting(self.category, "lastUsedColors_alpha_as_new", "lastUsedColors_alpha_as_new", ColorToolsOptions, "boolean", L["Options_lastUsedColors_alpha_as_new_name"], true)
+	setting:SetValueChangedCallback(function(self)
+        if self:GetValue() then 
+        else 
+			ColorToolsLastUsed = _.forEach(ColorToolsLastUsed, function(entry)
+				entry.color[4] = 1
+				return entry
+			end)
+        end
+    end)
+	
+	Settings.CreateCheckbox(self.category, setting, L["Options_lastUsedColors_alpha_as_new_desc"])
+
+
+	StaticPopupDialogs["COLORTOOLS_COMFIRMCLEAN_ColorToolsLastUsed"] = {
+		text =  L["Options_lastUsedColors_clearConfirm_text"],
+		button1 = L["Options_lastUsedColors_clearConfirm_yes"],
+		button2 = L["Options_lastUsedColors_clearConfirm_no"],
+		OnAccept = function()
+			ColorToolsLastUsed = {}
+			ColorTools.colorPalettes["lastUsedColors"].colors =  {}
+		 end,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+	}
+
+	local function onButtonClick()
+		StaticPopup_Show("COLORTOOLS_COMFIRMCLEAN_ColorToolsLastUsed")
+	end
+
+	local addSearchTags = false;
+	local initializer = CreateSettingsButtonInitializer("", L["Options_lastUsedColors_clearButton"], onButtonClick, nil, addSearchTags);
+	layout:AddInitializer(initializer);
+end  

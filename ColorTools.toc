@@ -1,9 +1,9 @@
-﻿## Interface: 110005, 110002
+﻿## Interface: 110007
 ## Title: ColorTools Color Picker
 ## Notes: Enhancement for the Color Picker
 ## Version: @project-version@
 ## Author: Muhmiauwau
-## SavedVariables: ColorToolsLastUsed ColorToolsFavorites ColorToolsSelected, ColorToolsOptions
+## SavedVariables: ColorToolsLastUsed ColorToolsFavorites ColorToolsSelected ColorToolsOptions
 ## X-Curse-Project-ID: 1083107
 ## X-Wago-ID: L6JDZjGv
 ## X-WoWI-ID: 26834

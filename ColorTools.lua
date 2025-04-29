@@ -99,11 +99,6 @@ ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()
 end)
 
 
-
-
-
-
-
 ColorPickerFrame:HookScript('OnShow', function(self)
 	self.Content:SetPoint("BOTTOMRIGHT", ColorPickerFrame, "BOTTOMRIGHT", ColorTools.config.frameExtend * -1, 0 )
 
@@ -111,6 +106,8 @@ ColorPickerFrame:HookScript('OnShow', function(self)
 	if self.hasOpacity then
 		w = 388 + ColorTools.config.frameExtend
     end
+
+	ColorPickerFrame:UnregisterEvent("GLOBAL_MOUSE_DOWN");
 
 	self:SetWidth(w);
 	ColorToolsPaletteFrame:updateColorPalette(w)

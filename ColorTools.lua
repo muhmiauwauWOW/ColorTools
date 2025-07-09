@@ -4,6 +4,7 @@ local _ = LibStub("LibLodash-1"):Get()
 
 ColorTools.colorPalettes = {}
 
+ColorTools.updateRunning = false
 
 ColorTools.config = {
 	frameExtend = 80,

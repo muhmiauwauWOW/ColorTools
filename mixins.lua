@@ -211,7 +211,10 @@ function ColorToolsInputMixin:OnLoad()
 	ColorPickerFrame.Content.HexBox:SetPoint("TOPLEFT", ColorPickerFrame.Content, "TOPRIGHT", -40, -35)
 
 
-	ColorPickerFrame.Content.ColorPicker:HookScript('OnColorSelect', function() self:UpdateInputs(); end)
+	ColorPickerFrame.Content.ColorPicker:HookScript('OnColorSelect', function() 
+		if ColorTools.updateRunning then return end
+		self:UpdateInputs();
+	end)
 end
 
 function ColorToolsInputMixin:OnShow()
@@ -240,6 +243,7 @@ end
 
 
 function ColorToolsInputMixin:SetColor(mode, type, value)
+	ColorTools.updateRunning =  true
 	local colorsTable = {}
 	if mode == "RGB" then
 		colorsTable["R"], colorsTable["G"], colorsTable["B"] = ColorPickerFrame.Content.ColorPicker:GetColorRGB()
@@ -254,6 +258,8 @@ function ColorToolsInputMixin:SetColor(mode, type, value)
 		colorsTable[type] = value / 100
 		ColorPickerFrame.Content.ColorPicker:SetColorAlpha(colorsTable[type])
 	end
+
+	ColorTools.updateRunning =  false
 end
 
 

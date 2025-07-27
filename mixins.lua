@@ -58,18 +58,17 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 
 	self.Contents.NoContentText:SetShown(#colors == 0)
 
-
-	for k, v in pairs(colors) do
-		if not v then return end
-		if not v.color then return end
-		local frame = self.pool:Acquire()
-		frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
-		frame.Color:SetColorTexture(unpack(v.color))
-		frame.color = v.color 
-		frame.description = self:getDescription(v)
-		frame:Show()
-		frame:RegisterForClicks("RightButtonDown", "LeftButtonDown")
-	end
+    _.forEach(colors, function(v, k)
+        if not v then return end
+        if not v.color then return end
+        local frame = self.pool:Acquire()
+        frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
+        frame.Color:SetColorTexture(unpack(v.color))
+        frame.color = v.color 
+        frame.description = self:getDescription(v)
+        frame:Show()
+        frame:RegisterForClicks("RightButtonDown", "LeftButtonDown")
+    end)
 end
 
 
@@ -170,9 +169,9 @@ function ColorToolsDropdownMixin:OnLoad()
 	end);
 
 	local items = {}
-    for k, v in pairs(ColorTools.colorPalettes) do
-		table.insert(items, {order = v.order, key = k, name = v.name})
-	end
+    _.forEach(ColorTools.colorPalettes, function(v, k)
+        table.insert(items, {order = v.order, key = k, name = v.name})
+    end)
 
     table.sort(items, function (a, b) return a.order < b.order end)
 	items = _.map(items, function(entry) return {entry.name, entry.key}; end)
@@ -235,15 +234,15 @@ function ColorToolsInputMixin:UpdateInputs()
 	colorsTable["A"] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
 
 	for k, input in pairs({self:GetChildren()}) do
-		local type = input.text
-		local color = colorsTable[type];
-		if type == "S" or type == "V" or type == "A" then
-			color = color * 100
-		end
+        local type = input.text
+        local color = colorsTable[type];
+        if type == "S" or type == "V" or type == "A" then
+            color = color * 100
+        end
 
-		if color < 0 then color = 0 end
-		input:SetNumber(math.floor(color))
-	end
+        if color < 0 then color = 0 end
+        input:SetNumber(math.floor(color))
+    end
 end
 
 

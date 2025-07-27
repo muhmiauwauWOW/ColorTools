@@ -37,42 +37,42 @@ end
 
 -- Generic function to process color tables into palette format
 function ColorUtils.processColorTable(colorTable, nameProvider, sortProvider)
-	local colors = {}
-	for k, v in pairs(colorTable) do
-		if ColorUtils.isValidColor(v) then
-			local name = nameProvider and nameProvider(k, v) or tostring(k)
-			local sort = sortProvider and sortProvider(k, v) or k
-			table.insert(colors, ColorUtils.createColorEntry(
-				sort,
-				name,
-				ColorUtils.extractRGBA(v)
-			))
-		end
-	end
-	return colors
+    local colors = {}
+    _.forEach(colorTable, function(v, k)
+        if ColorUtils.isValidColor(v) then
+            local name = nameProvider and nameProvider(k, v) or tostring(k)
+            local sort = sortProvider and sortProvider(k, v) or k
+            table.insert(colors, ColorUtils.createColorEntry(
+                sort,
+                name,
+                ColorUtils.extractRGBA(v)
+            ))
+        end
+    end)
+    return colors
 end
 
 -- Process nested color tables (like PowerBarColor)
 function ColorUtils.processNestedColorTable(colorTable, nameProvider)
-	local colors = {}
-	for k, v in pairs(colorTable) do
-		if type(k) == "string" and v and type(v) == "table" then
-			if ColorUtils.isValidColor(v) then
-				local name = nameProvider and nameProvider(k, v) or tostring(k)
-				table.insert(colors, ColorUtils.createColorEntry(k, name, ColorUtils.extractRGBA(v)))
-			else
-				-- Handle nested structures
-				for subKey, subVal in pairs(v) do
-					if ColorUtils.isValidColor(subVal) then
-						local combinedKey = k .. "-" .. subKey
-						local combinedName = nameProvider and nameProvider(combinedKey, subVal) or combinedKey
-						table.insert(colors, ColorUtils.createColorEntry(combinedKey, combinedName, ColorUtils.extractRGBA(subVal)))
-					end
-				end
-			end
-		end
-	end
-	return colors
+    local colors = {}
+    _.forEach(colorTable, function(v, k)
+        if type(k) == "string" and v and type(v) == "table" then
+            if ColorUtils.isValidColor(v) then
+                local name = nameProvider and nameProvider(k, v) or tostring(k)
+                table.insert(colors, ColorUtils.createColorEntry(k, name, ColorUtils.extractRGBA(v)))
+            else
+                -- Handle nested structures
+                _.forEach(v, function(subVal, subKey)
+                    if ColorUtils.isValidColor(subVal) then
+                        local combinedKey = k .. "-" .. subKey
+                        local combinedName = nameProvider and nameProvider(combinedKey, subVal) or combinedKey
+                        table.insert(colors, ColorUtils.createColorEntry(combinedKey, combinedName, ColorUtils.extractRGBA(subVal)))
+                    end
+                end)
+            end
+        end
+    end)
+    return colors
 end
 
 -- Generic palette creation helpers
@@ -109,93 +109,90 @@ end
 
 -- Creates the class colors palette
 function PaletteCreators.createClassPalette()
-	local classNames = LocalizedClassList()
-	local sortedClasses = {}
-	
-	for key, value in pairs(classNames) do
-		table.insert(sortedClasses, { key = key, value = value })
-	end
-	table.sort(sortedClasses, function(a, b) return a.value < b.value end)
+    local classNames = LocalizedClassList()
+    local sortedClasses = {}
+    _.forEach(classNames, function(value, key)
+        table.insert(sortedClasses, { key = key, value = value })
+    end)
+    table.sort(sortedClasses, function(a, b) return a.value < b.value end)
 
-	local function processClassColors(colorsTable)
-		local cTable = {}
-		for idx, classObj in ipairs(sortedClasses) do
-			local colorObj = colorsTable[classObj.key]
-			if colorObj and colorObj.GetRGBA then
-				table.insert(cTable, ColorUtils.createColorEntry(
-					idx,
-					classObj.value,
-					{colorObj:GetRGBA()}
-				))
-			end
-		end
-		return cTable
-	end
+    local function processClassColors(colorsTable)
+        local cTable = {}
+        _.forEach(sortedClasses, function(classObj, idx)
+            local colorObj = colorsTable[classObj.key]
+            if colorObj and colorObj.GetRGBA then
+                table.insert(cTable, ColorUtils.createColorEntry(
+                    idx,
+                    classObj.value,
+                    {colorObj:GetRGBA()}
+                ))
+            end
+        end)
+        return cTable
+    end
 
-	local classTable = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
-	return {
-		name = L["classColors"],
-		colors = processClassColors(classTable)
-	}
+    local classTable = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
+    return {
+        name = L["classColors"],
+        colors = processClassColors(classTable)
+    }
 end
 
 -- Creates the item quality colors palette
 function PaletteCreators.createItemQualityPalette()
-	local colors = {}
-	for key, id in pairs(Enum.ItemQuality) do
-		local entry = ITEM_QUALITY_COLORS and ITEM_QUALITY_COLORS[id]
-		if ColorUtils.isValidColor(entry) then
-			table.insert(colors, ColorUtils.createColorEntry(
-				id,
-				key,
-				ColorUtils.extractRGBA(entry)
-			))
-		end
-	end
-	return createBasicPalette("ItemQuality", colors)
+    local colors = {}
+    _.forEach(Enum.ItemQuality, function(id, key)
+        local entry = ITEM_QUALITY_COLORS and ITEM_QUALITY_COLORS[id]
+        if ColorUtils.isValidColor(entry) then
+            table.insert(colors, ColorUtils.createColorEntry(
+                id,
+                key,
+                ColorUtils.extractRGBA(entry)
+            ))
+        end
+    end)
+    return createBasicPalette("ItemQuality", colors)
 end
 
 -- Creates the font colors palette
 function PaletteCreators.createFontColorsPalette()
-	local fontColorDefinitions = {
-		{color = WHITE_FONT_COLOR, name = L["White"]},
-		{color = RED_FONT_COLOR, name = L["Red"]},
-		{color = GREEN_FONT_COLOR, name = L["Green"]},
-		{color = BLUE_FONT_COLOR, name = L["Blue"]},
-		{color = GRAY_FONT_COLOR, name = L["Gray"]},
-		{color = BLACK_FONT_COLOR, name = L["Black"]},
-		{color = HIGHLIGHT_FONT_COLOR, name = L["Highlight"]},
-		{color = DISABLED_FONT_COLOR, name = L["Disabled"]},
-		{color = DIM_RED_FONT_COLOR, name = L["DimRed"]},
-		{color = ORANGE_FONT_COLOR, name = L["Orange"]},
-		{color = YELLOW_FONT_COLOR, name = L["Yellow"]},
-		{color = BRIGHTBLUE_FONT_COLOR, name = L["BrightBlue"]},
-		{color = LIGHTYELLOW_FONT_COLOR, name = L["LightYellow"]},
-		{color = ARTIFACT_GOLD_COLOR, name = L["ArtifactGold"]},
-	}
-	
-	local colors = {}
-	for i, entry in ipairs(fontColorDefinitions) do
-		if ColorUtils.isValidColor(entry.color) then
-			table.insert(colors, ColorUtils.createColorEntry(
-				i,
-				entry.name,
-				ColorUtils.extractRGBA(entry.color)
-			))
-		end
-	end
-	
-	return createBasicPalette("FontColors", colors)
+    local fontColorDefinitions = {
+        {color = WHITE_FONT_COLOR, name = L["White"]},
+        {color = RED_FONT_COLOR, name = L["Red"]},
+        {color = GREEN_FONT_COLOR, name = L["Green"]},
+        {color = BLUE_FONT_COLOR, name = L["Blue"]},
+        {color = GRAY_FONT_COLOR, name = L["Gray"]},
+        {color = BLACK_FONT_COLOR, name = L["Black"]},
+        {color = HIGHLIGHT_FONT_COLOR, name = L["Highlight"]},
+        {color = DISABLED_FONT_COLOR, name = L["Disabled"]},
+        {color = DIM_RED_FONT_COLOR, name = L["DimRed"]},
+        {color = ORANGE_FONT_COLOR, name = L["Orange"]},
+        {color = YELLOW_FONT_COLOR, name = L["Yellow"]},
+        {color = BRIGHTBLUE_FONT_COLOR, name = L["BrightBlue"]},
+        {color = LIGHTYELLOW_FONT_COLOR, name = L["LightYellow"]},
+        {color = ARTIFACT_GOLD_COLOR, name = L["ArtifactGold"]},
+    }
+    local colors = {}
+    _.forEach(fontColorDefinitions, function(entry, i)
+        if ColorUtils.isValidColor(entry.color) then
+            table.insert(colors, ColorUtils.createColorEntry(
+                i,
+                entry.name,
+                ColorUtils.extractRGBA(entry.color)
+            ))
+        end
+    end)
+    return createBasicPalette("FontColors", colors)
 end
 
 -- Creates the covenant colors palette
 function PaletteCreators.createCovenantColorsPalette()
     local filtered = {}
-    for k, v in pairs(COVENANT_COLORS) do
+    _.forEach(COVENANT_COLORS, function(v, k)
         if type(k) == "string" and ColorUtils.isValidColor(v) then
             table.insert(filtered, ColorUtils.createColorEntry(k, k, ColorUtils.extractRGBA(v)))
         end
-    end
+    end)
     return createBasicPalette("CovenantColors", ColorUtils.sortColorsByDescription(filtered))
 end
 
@@ -217,24 +214,21 @@ end
 
 -- Creates the player faction colors palette
 function PaletteCreators.createPlayerFactionColorsPalette()
-	local factionNames = {
-		[0] = "Horde",
-		[1] = "Alliance"
-	}
-	
-	local nameProvider = function(k, v) return factionNames[k] or tostring(k) end
-	local colors = ColorUtils.processColorTable(PLAYER_FACTION_COLORS, nameProvider)
-	
-	-- Filter and sort by faction order
-	local filteredColors = {}
-	for _, color in ipairs(colors) do
-		if color.sort == 0 or color.sort == 1 then
-			table.insert(filteredColors, color)
-		end
-	end
-	table.sort(filteredColors, function(a, b) return a.sort < b.sort end)
-	
-	return createBasicPalette("PlayerFactionColors", filteredColors)
+    local factionNames = {
+        [0] = "Horde",
+        [1] = "Alliance"
+    }
+    local nameProvider = function(k, v) return factionNames[k] or tostring(k) end
+    local colors = ColorUtils.processColorTable(PLAYER_FACTION_COLORS, nameProvider)
+    -- Filter and sort by faction order
+    local filteredColors = {}
+    _.forEach(colors, function(color)
+        if color.sort == 0 or color.sort == 1 then
+            table.insert(filteredColors, color)
+        end
+    end)
+    table.sort(filteredColors, function(a, b) return a.sort < b.sort end)
+    return createBasicPalette("PlayerFactionColors", filteredColors)
 end
 
 -- Creates the material title text colors palette
@@ -258,9 +252,9 @@ local paletteRegistry = {
 }
 
 -- Initialize all palettes
-for order, entry in ipairs(paletteRegistry) do
-	local key, creatorFn = entry[1], entry[2]
-	local palette = creatorFn()
-	palette.order = order
-	ColorTools.colorPalettes[key] = palette
-end
+_.forEach(paletteRegistry, function(entry, order)
+    local key, creatorFn = entry[1], entry[2]
+    local palette = creatorFn()
+    palette.order = order
+    ColorTools.colorPalettes[key] = palette
+end)

@@ -56,7 +56,7 @@ function ColorTools:gererateAllColorsTable()
 			table.insert(ColorTools.allColors, {
 				name = string.format(format, pallettName, description),
 				sort = allColorsi,
-				color = CreateColor(table.unpack(color.color)),
+				color = CreateColor(unpack(color.color)),
 			})
 		end)
 	end)
@@ -71,13 +71,13 @@ ColorPickerFrame.Footer.OkayButton:HookScript('OnClick', function()
 	
 	if ColorToolsOptions.lastUsedColors_duplicates then
 		if not _.isEmpty(ColorToolsLastUsed) then
-			local c1 = CreateColor(table.unpack(ColorToolsLastUsed[1].color))
-			local c2 = CreateColor(table.unpack(color))
+			local c1 = CreateColor(unpack(ColorToolsLastUsed[1].color))
+			local c2 = CreateColor(unpack(color))
 
 			if ColorToolsOptions.lastUsedColors_alpha_as_new then 
-				if c1:IsEqualTo(c2) then return	end
+				if c1:IsEqualTo(c2) then return end
 			else 
-				if c1:IsRGBEqualTo(c2) then return end
+				if c1:IsEqualTo(c2) then return end
 			end
 		end
 	end
@@ -135,20 +135,20 @@ ColorTools.favorits = {}
 function ColorTools.favorits:is(color, i)
 	local fn = i and _.findIndex or _.find
 	return fn(ColorToolsFavorites, function(entry)
-		return CreateColor(table.unpack(entry.color)):IsEqualTo(CreateColor(table.unpack(color)))
+		return CreateColor(unpack(entry.color)):IsEqualTo(CreateColor(unpack(color)))
 	end)
 end
 
 function ColorTools.favorits:add(color)
 	if self:is(color.color)then return end
 	table.insert(ColorToolsFavorites, 1, color)
-	ColorTools:updateColorPalette("favoriteColors")
+	ColorTools:updateColorPalette()
 end
 
 function ColorTools.favorits:remove(color)
 	local index = self:is(color, true)
 	table.remove(ColorToolsFavorites, index)
-	ColorTools:updateColorPalette("favoriteColors")
+	ColorTools:updateColorPalette()
 end
 
 
@@ -215,4 +215,4 @@ function ColorTools.Options:init()
 	local addSearchTags = false;
 	local initializer = CreateSettingsButtonInitializer("", L["Options_lastUsedColors_clearButton"], onButtonClick, nil, addSearchTags);
 	layout:AddInitializer(initializer);
-end  
+end

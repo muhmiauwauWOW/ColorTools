@@ -32,7 +32,8 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 
 
 	self.pool:ReleaseAll();
-	local colors = ColorTools.colorPalettes[ColorToolsDropdown.selected].colors
+	local palette = ColorTools.colorPalettes[ColorToolsDropdown.selected]
+	local colors = (palette and palette.colors) or {}
 
 	if ColorToolsDropdown.selected ~= "lastUsedColors" then 
 		table.sort(colors, function(a,b) return a.sort < b.sort end)
@@ -54,17 +55,17 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 	self.Contents.NoContentText:SetShown(#colors == 0)
 
 
-	table.foreach(colors, function(k, v)
+	for k, v in pairs(colors) do
 		if not v then return end
 		if not v.color then return end
 		local frame = self.pool:Acquire()
 		frame:SetPoint("TOPLEFT", self.Contents, "TOPLEFT", getPos("x", k), getPos("y", k) *-1)
-		frame.Color:SetColorTexture(table.unpack(v.color))
+		frame.Color:SetColorTexture(unpack(v.color))
 		frame.color = v.color 
 		frame.description = self:getDescription(v)
 		frame:Show()
 		frame:RegisterForClicks("RightButtonDown", "LeftButtonDown")
-	end)
+	end
 end
 
 
@@ -73,7 +74,7 @@ function ColorToolsPaletteMixin:getDescription(v)
 	if v.description then return v.description end
 
 	if ColorToolsDropdown.selected == "lastUsedColors" or ColorToolsDropdown.selected == "favoriteColors" then
-		local currentColor = CreateColor(table.unpack(v.color))
+		local currentColor = CreateColor(unpack(v.color))
 		local matches = _.filter(ColorTools.allColors, function(color, k) return color.color:IsEqualTo(currentColor) end)
 		if #matches == 0 then return "" end
 
@@ -94,7 +95,7 @@ ColorToolsColorButtonMixin = {}
 
 function ColorToolsColorButtonMixin:OnClick(button, b,c)
 	if button == "LeftButton" then 
-		ColorPickerFrame.Content.ColorPicker:SetColorRGB(table.unpack(self.color));
+		ColorPickerFrame.Content.ColorPicker:SetColorRGB(unpack(self.color));
 		if ColorPickerFrame.hasOpacity then
 			ColorPickerFrame.Content.ColorPicker:SetColorAlpha(self.color[4])
 		end
@@ -165,9 +166,9 @@ function ColorToolsDropdownMixin:OnLoad()
 	end);
 
 	local items = {}
-    table.foreach(ColorTools.colorPalettes, function(k, v)
-        table.insert(items, {order = v.order, key = k, name = v.name})
-    end)
+    for k, v in pairs(ColorTools.colorPalettes) do
+		table.insert(items, {order = v.order, key = k, name = v.name})
+	end
 
     table.sort(items, function (a, b) return a.order < b.order end)
 	items = _.map(items, function(entry) return {entry.name, entry.key}; end)
@@ -181,7 +182,7 @@ function ColorToolsDropdownMixin:OnLoad()
 			ColorToolsSelected = value
 			ColorToolsPaletteFrame:updateColorPalette()
         end,
-        table.unpack(items)
+        unpack(items)
     )
 
 
@@ -229,7 +230,7 @@ function ColorToolsInputMixin:UpdateInputs()
 	colorsTable["H"], colorsTable["S"], colorsTable["V"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
 	colorsTable["A"] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
 
-	table.foreach({self:GetChildren()}, function(k, input)
+	for k, input in pairs({self:GetChildren()}) do
 		local type = input.text
 		local color = colorsTable[type];
 		if type == "S" or type == "V" or type == "A" then
@@ -238,7 +239,7 @@ function ColorToolsInputMixin:UpdateInputs()
 
 		if color < 0 then color = 0 end
 		input:SetNumber(math.floor(color))
-	end)
+	end
 end
 
 

@@ -36,7 +36,11 @@ function ColorToolsPaletteMixin:updateColorPalette(width)
 	local colors = (palette and palette.colors) or {}
 
 	if ColorToolsDropdown.selected ~= "lastUsedColors" then 
-		table.sort(colors, function(a,b) return a.sort < b.sort end)
+		table.sort(colors, function(a,b) 
+			local sa = tonumber(a.sort) or 0
+			local sb = tonumber(b.sort) or 0
+			return sa < sb
+		end)
 	end
 
 	-- set child height

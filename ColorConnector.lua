@@ -190,8 +190,13 @@ end
 
 -- Creates the covenant colors palette
 function PaletteCreators.createCovenantColorsPalette()
-	local colors = ColorUtils.processColorTable(COVENANT_COLORS, nil, nil)
-	return createBasicPalette("CovenantColors", ColorUtils.sortColorsByDescription(colors))
+    local filtered = {}
+    for k, v in pairs(COVENANT_COLORS) do
+        if type(k) == "string" and ColorUtils.isValidColor(v) then
+            table.insert(filtered, ColorUtils.createColorEntry(k, k, ColorUtils.extractRGBA(v)))
+        end
+    end
+    return createBasicPalette("CovenantColors", ColorUtils.sortColorsByDescription(filtered))
 end
 
 -- Creates the material text colors palette

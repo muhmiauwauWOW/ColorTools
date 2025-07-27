@@ -33,9 +33,8 @@ local function convertColorsList(colors)
 end
 
 -- Helper for generic palette creation
-local function createGenericPalette(tbl, name, order)
+local function createGenericPalette(tbl, name)
 	return {
-		order = order,
 		name = L[name],
 		colors = convertColorsList(convertColors(tbl))
 	}
@@ -44,7 +43,6 @@ end
 -- Creates the palette for last used colors
 local function createLastUsedPalette()
 	return {
-		order = 0,
 		name = L["lastUsedColors"],
 		colors = {}
 	}
@@ -53,7 +51,6 @@ end
 -- Creates the favorites palette
 local function createFavoritePalette()
 	return {
-		order = 0,
 		name = L["favoriteColors"],
 		colors = {}
 	}
@@ -85,11 +82,11 @@ local function createClassPalette()
 
 	local classTable = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 	return {
-		order = 1,
 		name = L["classColors"],
 		colors = processClassColors(classTable)
 	}
 end
+
 
 -- Creates the item quality colors palette
 local function createItemQualityPalette()
@@ -106,7 +103,6 @@ local function createItemQualityPalette()
 		end
 	end
 	return {
-		order = 2,
 		name = L["ItemQuality"],
 		colors = ItemQualityColors
 	}
@@ -143,7 +139,6 @@ local function createFontColorsPalette()
 		end
 	end
 	return {
-		order = 10,
 		name = L["FontColors"],
 		colors = colors
 	}
@@ -168,7 +163,6 @@ local function createCovenantColorsPalette()
 		return tostring(a.description) < tostring(b.description)
 	end)
 	return {
-		order = 13,
 		name = L["CovenantColors"],
 		colors = colors
 	}
@@ -176,7 +170,7 @@ end
 
 -- Creates the material text colors palette
 local function createMaterialTextColorsPalette()
-	return createGenericPalette(MATERIAL_TEXT_COLOR_TABLE, "MaterialTextColors", 14)
+	return createGenericPalette(MATERIAL_TEXT_COLOR_TABLE, "MaterialTextColors")
 end
 
 -- Creates the power bar colors palette
@@ -209,7 +203,6 @@ local function createPowerBarPalette()
 		return tostring(a.description) < tostring(b.description)
 	end)
 	return {
-		order = 15,
 		name = L["PowerBarColor"],
 		colors = colors
 	}
@@ -217,7 +210,7 @@ end
 
 -- Creates the objective tracker colors palette
 local function createObjectiveTrackerPalette()
-	return createGenericPalette(OBJECTIVE_TRACKER_COLOR, "ObjectiveTrackerColor", 16)
+	return createGenericPalette(OBJECTIVE_TRACKER_COLOR, "ObjectiveTrackerColor")
 end
 
 -- Creates the player faction colors palette
@@ -241,7 +234,6 @@ local function createPlayerFactionColorsPalette()
 		return a.sort < b.sort
 	end)
 	return {
-		order = 20,
 		name = L["PlayerFactionColors"],
 		colors = colors
 	}
@@ -264,7 +256,6 @@ local function createMaterialTitleTextColorsPalette()
 		return tostring(a.description) < tostring(b.description)
 	end)
 	return {
-		order = 22,
 		name = L["MaterialTitleTextColors"],
 		colors = colors
 	}
@@ -285,16 +276,10 @@ local palettes = {
 	{"PowerBarColor", createPowerBarPalette},
 }
 
+local i = 0
 for _, entry in ipairs(palettes) do
+	i = i + 1
 	local key, fn = entry[1], entry[2]
 	ColorTools.colorPalettes[key] = fn()
+	ColorTools.colorPalettes[key].order = i
 end
-
-
--- ColorTools.colorPalettes["lastUsedColors"] = createLastUsedPalette()
--- ColorTools.colorPalettes["favoriteColors"] = createFavoritePalette()
--- ColorTools.colorPalettes["classColors"] = createClassPalette()
--- ColorTools.colorPalettes["ItemQuality"] = createItemQualityPalette()
--- ColorTools.colorPalettes["powerBarColor"] = createPowerBarPalette()
--- ColorTools.colorPalettes["objectiveTrackerColor"] = createObjectiveTrackerPalette()
--- ColorTools.colorPalettes["debuffTypeColor"] = createDebuffTypePalette()

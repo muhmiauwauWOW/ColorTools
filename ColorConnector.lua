@@ -29,10 +29,7 @@ end
 
 -- Sorts colors alphabetically by description
 function ColorUtils.sortColorsByDescription(colors)
-	table.sort(colors, function(a, b)
-		return tostring(a.description) < tostring(b.description)
-	end)
-	return colors
+    return _.sortBy(colors, function(a) return tostring(a.description) end)
 end
 
 -- Generic function to process color tables into palette format
@@ -91,72 +88,51 @@ end
 -- Palette creation functions
 local PaletteCreators = {}
 
--- Creates the palette for last used colors
 function PaletteCreators.createLastUsedPalette()
-	return {
-		name = L["lastUsedColors"],
-		colors = {}
-	}
+    return { name = L["lastUsedColors"], colors = {} }
 end
-
--- Creates the favorites palette
 function PaletteCreators.createFavoritePalette()
-	return {
-		name = L["favoriteColors"],
-		colors = {}
-	}
+    return { name = L["favoriteColors"], colors = {} }
 end
-
--- Creates the class colors palette
 function PaletteCreators.createClassPalette()
     local classNames = LocalizedClassList()
-    local sortedClasses = {}
-    _.forEach(classNames, function(value, key)
-        table.insert(sortedClasses, { key = key, value = value })
-    end)
-    table.sort(sortedClasses, function(a, b) return a.value < b.value end)
-
+    local sortedClasses = _.sortBy(
+        _.map(classNames, function(value, key) return { key = key, value = value } end),
+        function(a) return a.value end
+    )
     local function processClassColors(colorsTable)
-        local cTable = {}
-        _.forEach(sortedClasses, function(classObj, idx)
+        return _.map(sortedClasses, function(classObj, idx)
             local colorObj = colorsTable[classObj.key]
             if colorObj and colorObj.GetRGBA then
-                table.insert(cTable, ColorUtils.createColorEntry(
-                    idx,
-                    classObj.value,
-                    {colorObj:GetRGBA()}
-                ))
+                return ColorUtils.createColorEntry(idx, classObj.value, {colorObj:GetRGBA()})
             end
         end)
-        return cTable
     end
-
     local classTable = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
     return {
         name = L["classColors"],
-        colors = processClassColors(classTable)
+        colors = _.filter(processClassColors(classTable), function(v) return v ~= nil end)
     }
 end
-
--- Creates the item quality colors palette
-function PaletteCreators.createItemQualityPalette()
-    local colors = {}
-    _.forEach(Enum.ItemQuality, function(id, key)
-        local entry = ITEM_QUALITY_COLORS and ITEM_QUALITY_COLORS[id]
-        if ColorUtils.isValidColor(entry) then
-            table.insert(colors, ColorUtils.createColorEntry(
-                id,
-                key,
-                ColorUtils.extractRGBA(entry)
-            ))
+function PaletteCreators.createCovenantColorsPalette()
+    local filtered = {}
+    _.forEach(COVENANT_COLORS, function(v, k)
+        if type(k) == "string" and ColorUtils.isValidColor(v) then
+            table.insert(filtered, ColorUtils.createColorEntry(k, k, ColorUtils.extractRGBA(v)))
         end
     end)
-    return createBasicPalette("ItemQuality", colors)
+    return createBasicPalette("CovenantColors", ColorUtils.sortColorsByDescription(filtered))
 end
-
--- Creates the font colors palette
-function PaletteCreators.createFontColorsPalette()
-    local fontColorDefinitions = {
+function PaletteCreators.createPlayerFactionColorsPalette()
+    local factionNames = { [0] = "Horde", [1] = "Alliance" }
+    local nameProvider = function(k, v) return factionNames[k] or tostring(k) end
+    local colors = ColorUtils.processColorTable(PLAYER_FACTION_COLORS, nameProvider)
+    local filteredColors = _.filter(colors, function(color) return color.sort == 0 or color.sort == 1 end)
+    return createBasicPalette("PlayerFactionColors", _.sortBy(filteredColors, function(a) return a.sort end))
+end
+-- Generische Palette-Erstellung für alle anderen
+local genericPalettes = {
+    FontColors = { table = {
         {color = WHITE_FONT_COLOR, name = L["White"]},
         {color = RED_FONT_COLOR, name = L["Red"]},
         {color = GREEN_FONT_COLOR, name = L["Green"]},
@@ -171,69 +147,30 @@ function PaletteCreators.createFontColorsPalette()
         {color = BRIGHTBLUE_FONT_COLOR, name = L["BrightBlue"]},
         {color = LIGHTYELLOW_FONT_COLOR, name = L["LightYellow"]},
         {color = ARTIFACT_GOLD_COLOR, name = L["ArtifactGold"]},
-    }
-    local colors = {}
-    _.forEach(fontColorDefinitions, function(entry, i)
-        if ColorUtils.isValidColor(entry.color) then
-            table.insert(colors, ColorUtils.createColorEntry(
-                i,
-                entry.name,
-                ColorUtils.extractRGBA(entry.color)
-            ))
+    }, name = "FontColors" },
+    ItemQuality = { table = Enum.ItemQuality, name = "ItemQuality", custom = function(tbl)
+        return _.filter(_.map(tbl, function(id, key)
+            local entry = ITEM_QUALITY_COLORS and ITEM_QUALITY_COLORS[id]
+            if ColorUtils.isValidColor(entry) then
+                return ColorUtils.createColorEntry(id, key, ColorUtils.extractRGBA(entry))
+            end
+        end), function(v) return v ~= nil end)
+    end },
+    MaterialTextColors = { table = MATERIAL_TEXT_COLOR_TABLE, name = "MaterialTextColors" },
+    MaterialTitleTextColors = { table = MATERIAL_TITLETEXT_COLOR_TABLE, name = "MaterialTitleTextColors" },
+    ObjectiveTrackerColor = { table = OBJECTIVE_TRACKER_COLOR, name = "ObjectiveTrackerColor" },
+    PowerBarColor = { table = PowerBarColor, name = "PowerBarColor", custom = ColorUtils.processNestedColorTable },
+}
+for key, def in pairs(genericPalettes) do
+    PaletteCreators["create" .. key .. "Palette"] = function()
+        local colors
+        if def.custom then
+            colors = def.custom(def.table)
+        else
+            colors = ColorUtils.processColorTable(def.table)
         end
-    end)
-    return createBasicPalette("FontColors", colors)
-end
-
--- Creates the covenant colors palette
-function PaletteCreators.createCovenantColorsPalette()
-    local filtered = {}
-    _.forEach(COVENANT_COLORS, function(v, k)
-        if type(k) == "string" and ColorUtils.isValidColor(v) then
-            table.insert(filtered, ColorUtils.createColorEntry(k, k, ColorUtils.extractRGBA(v)))
-        end
-    end)
-    return createBasicPalette("CovenantColors", ColorUtils.sortColorsByDescription(filtered))
-end
-
--- Creates the material text colors palette
-function PaletteCreators.createMaterialTextColorsPalette()
-	return createGenericPalette(MATERIAL_TEXT_COLOR_TABLE, "MaterialTextColors")
-end
-
--- Creates the power bar colors palette
-function PaletteCreators.createPowerBarPalette()
-	local colors = ColorUtils.processNestedColorTable(PowerBarColor)
-	return createBasicPalette("PowerBarColor", ColorUtils.sortColorsByDescription(colors))
-end
-
--- Creates the objective tracker colors palette
-function PaletteCreators.createObjectiveTrackerPalette()
-	return createGenericPalette(OBJECTIVE_TRACKER_COLOR, "ObjectiveTrackerColor")
-end
-
--- Creates the player faction colors palette
-function PaletteCreators.createPlayerFactionColorsPalette()
-    local factionNames = {
-        [0] = "Horde",
-        [1] = "Alliance"
-    }
-    local nameProvider = function(k, v) return factionNames[k] or tostring(k) end
-    local colors = ColorUtils.processColorTable(PLAYER_FACTION_COLORS, nameProvider)
-    -- Filter and sort by faction order
-    local filteredColors = {}
-    _.forEach(colors, function(color)
-        if color.sort == 0 or color.sort == 1 then
-            table.insert(filteredColors, color)
-        end
-    end)
-    table.sort(filteredColors, function(a, b) return a.sort < b.sort end)
-    return createBasicPalette("PlayerFactionColors", filteredColors)
-end
-
--- Creates the material title text colors palette
-function PaletteCreators.createMaterialTitleTextColorsPalette()
-	return createGenericPalette(MATERIAL_TITLETEXT_COLOR_TABLE, "MaterialTitleTextColors")
+        return createBasicPalette(def.name, ColorUtils.sortColorsByDescription(colors))
+    end
 end
 
 -- Register palettes alphabetically

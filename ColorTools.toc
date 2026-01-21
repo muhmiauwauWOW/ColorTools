@@ -1,4 +1,4 @@
-﻿## Interface: 110207
+﻿## Interface: 120000
 ## Title: ColorTools Color Picker
 ## Notes: Enhancement for the Color Picker
 ## Version: @project-version@

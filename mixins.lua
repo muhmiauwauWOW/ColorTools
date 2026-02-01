@@ -256,7 +256,7 @@ function ColorToolsInputMixin:SetColor(mode, type, value)
 	elseif mode == "HSV" then 
 		colorsTable["H"], colorsTable["S"], colorsTable["V"] = ColorPickerFrame.Content.ColorPicker:GetColorHSV()
 		colorsTable[type] = (type ~= "H") and value / 100 or value
-		ColorPickerFrame.Content.ColorPicker:SetColorHSV(colorsTable["X"], colorsTable["Y"], colorsTable["Z"])
+		ColorPickerFrame.Content.ColorPicker:SetColorHSV(colorsTable["H"], colorsTable["S"], colorsTable["V"])
 	elseif mode == "ALPHA" then 
 		colorsTable[type] = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
 		colorsTable[type] = value / 100
